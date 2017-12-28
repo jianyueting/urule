@@ -205,6 +205,7 @@ public class Utils implements ApplicationContextAware{
 		return debugWriters;
 	}
 	
+	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		functionDescriptorMap.clear();
 		functionDescriptorLabelMap.clear();
