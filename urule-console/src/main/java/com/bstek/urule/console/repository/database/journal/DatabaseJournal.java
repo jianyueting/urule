@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2017 Bstek
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -15,41 +15,25 @@
  ******************************************************************************/
 package com.bstek.urule.console.repository.database.journal;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Calendar;
-
-import javax.sql.DataSource;
-
+import com.bstek.urule.console.repository.RepositoryBuilder;
 import org.apache.commons.io.IOUtils;
-import org.apache.jackrabbit.core.journal.AbstractJournal;
-import org.apache.jackrabbit.core.journal.AppendRecord;
-import org.apache.jackrabbit.core.journal.FileRevision;
-import org.apache.jackrabbit.core.journal.InstanceRevision;
-import org.apache.jackrabbit.core.journal.JournalException;
-import org.apache.jackrabbit.core.journal.RecordIterator;
-import org.apache.jackrabbit.core.util.db.CheckSchemaOperation;
-import org.apache.jackrabbit.core.util.db.ConnectionFactory;
-import org.apache.jackrabbit.core.util.db.ConnectionHelper;
-import org.apache.jackrabbit.core.util.db.DatabaseAware;
-import org.apache.jackrabbit.core.util.db.DbUtility;
-import org.apache.jackrabbit.core.util.db.StreamWrapper;
+import org.apache.jackrabbit.core.journal.*;
+import org.apache.jackrabbit.core.util.db.*;
 import org.apache.jackrabbit.spi.commons.namespace.NamespaceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.bstek.urule.console.repository.RepositoryBuilder;
+import javax.sql.DataSource;
+import java.io.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
 
 /**
  * @author Jacky.gao
  * @since 2017年12月7日
  */
-public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
+public class DatabaseJournal extends AbstractJournal implements DatabaseAware {
 
     /**
      * Default journal table name, used to check schema completeness.
@@ -198,12 +182,13 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
      * Schema object prefix, bean property.
      */
     protected String schemaObjectPrefix;
-/*
-    *//**
+    /*
+     */
+
+    /**
      * The repositories {@link ConnectionFactory}.
      *//*
     private ConnectionFactory connectionFactory;*/
-
     public DatabaseJournal() {
         databaseType = "default";
         schemaObjectPrefix = "";
@@ -212,6 +197,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setConnectionFactory(ConnectionFactory connnectionFactory) {
         //this.connectionFactory = connnectionFactory;
     }
@@ -219,6 +205,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init(String id, NamespaceResolver resolver)
             throws JournalException {
 
@@ -257,7 +244,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
         } else {
             return connectionFactory.getDataSource(dataSourceName);
         }*/
-    	return RepositoryBuilder.datasource;
+        return RepositoryBuilder.datasource;
     }
 
     /**
@@ -283,7 +270,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
     protected CheckSchemaOperation createCheckSchemaOperation() {
         InputStream in = org.apache.jackrabbit.core.journal.DatabaseJournal.class.getResourceAsStream(databaseType + ".ddl");
         return new CheckSchemaOperation(conHelper, in, schemaObjectPrefix + DEFAULT_JOURNAL_TABLE).addVariableReplacement(
-            CheckSchemaOperation.SCHEMA_OBJECT_PREFIX_VARIABLE, schemaObjectPrefix);
+                CheckSchemaOperation.SCHEMA_OBJECT_PREFIX_VARIABLE, schemaObjectPrefix);
     }
 
     /**
@@ -292,10 +279,11 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
      * <code>url</code> have been specified and optionally deduces a valid
      * database type. Should be overridden by subclasses that use a different way to
      * create a connection and therefore require other arguments.
+     *
      * @throws JournalException if initialization fails
      */
     protected void init() throws JournalException {
-    	databaseType=RepositoryBuilder.databaseType;
+        databaseType = RepositoryBuilder.databaseType;
     }
 
     /**
@@ -333,6 +321,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
     /* (non-Javadoc)
      * @see org.apache.jackrabbit.core.journal.Journal#getInstanceRevision()
      */
+    @Override
     public InstanceRevision getInstanceRevision() throws JournalException {
         return databaseRevision;
     }
@@ -340,6 +329,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
     /**
      * {@inheritDoc}
      */
+    @Override
     public RecordIterator getRecords(long startRevision) throws JournalException {
         try {
             return new DatabaseRecordIterator(conHelper.exec(selectRevisionsStmtSQL, new Object[]{new Long(
@@ -352,6 +342,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
     /**
      * {@inheritDoc}
      */
+    @Override
     public RecordIterator getRecords() throws JournalException {
         try {
             return new DatabaseRecordIterator(conHelper.exec(selectRevisionsStmtSQL, new Object[]{new Long(
@@ -368,8 +359,8 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
      * out of memory. See JCR-2832
      *
      * @param startRevision start point (exclusive)
-     * @param startup indicates if the cluster node is syncing on startup 
-     *        or does a normal sync.
+     * @param startup       indicates if the cluster node is syncing on startup
+     *                      or does a normal sync.
      * @throws JournalException if an error occurs
      */
     @Override
@@ -398,6 +389,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
      * table. The updated value is then saved away and remembered in the
      * appended record, because a save may entail multiple appends (JCR-884).
      */
+    @Override
     protected void doLock() throws JournalException {
         ResultSet rs = null;
         boolean succeeded = false;
@@ -412,7 +404,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
             conHelper.exec(updateGlobalStmtSQL);
             rs = conHelper.exec(selectGlobalStmtSQL, null, false, 0);
             if (!rs.next()) {
-                 throw new JournalException("No revision available.");
+                throw new JournalException("No revision available.");
             }
             lockedRevision = rs.getLong(1);
             succeeded = true;
@@ -425,6 +417,8 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
             }
         }
     }
+
+    @Override
     protected void doUnlock(boolean successful) {
         endBatch(successful);
     }
@@ -438,7 +432,8 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
     private void endBatch(boolean successful) {
         if (--lockLevel == 0) {
             try {
-                conHelper.endBatch(successful);;
+                conHelper.endBatch(successful);
+                ;
             } catch (SQLException e) {
                 log.error("failed to end batch", e);
             }
@@ -448,6 +443,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
     /**
      * Save away the locked revision inside the newly appended record.
      */
+    @Override
     protected void appending(AppendRecord record) {
         record.setRevision(lockedRevision);
     }
@@ -455,12 +451,13 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
     /**
      * We have already saved away the revision for this record.
      */
+    @Override
     protected void append(AppendRecord record, InputStream in, int length)
             throws JournalException {
 
         try {
             conHelper.exec(insertRevisionStmtSQL, record.getRevision(), getId(), record.getProducerId(),
-                new StreamWrapper(in, length));
+                    new StreamWrapper(in, length));
 
         } catch (SQLException e) {
             String msg = "Unable to append revision " + lockedRevision + ".";
@@ -468,6 +465,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
         }
     }
 
+    @Override
     public void close() {
         if (janitorThread != null) {
             janitorThread.interrupt();
@@ -502,7 +500,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
         // Run the schema check for the single table
         new CheckSchemaOperation(conHelper, localRevisionDDLStream, schemaObjectPrefix
                 + LOCAL_REVISIONS_TABLE).addVariableReplacement(
-            CheckSchemaOperation.SCHEMA_OBJECT_PREFIX_VARIABLE, schemaObjectPrefix).run();
+                CheckSchemaOperation.SCHEMA_OBJECT_PREFIX_VARIABLE, schemaObjectPrefix).run();
     }
 
     /**
@@ -511,31 +509,31 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
      */
     protected void buildSQLStatements() {
         selectRevisionsStmtSQL =
-            "select REVISION_ID, JOURNAL_ID, PRODUCER_ID, REVISION_DATA from "
-            + schemaObjectPrefix + "JOURNAL where REVISION_ID > ? order by REVISION_ID";
+                "select REVISION_ID, JOURNAL_ID, PRODUCER_ID, REVISION_DATA from "
+                        + schemaObjectPrefix + "JOURNAL where REVISION_ID > ? order by REVISION_ID";
         updateGlobalStmtSQL =
-            "update " + schemaObjectPrefix + "GLOBAL_REVISION"
-            + " set REVISION_ID = REVISION_ID + 1";
+                "update " + schemaObjectPrefix + "GLOBAL_REVISION"
+                        + " set REVISION_ID = REVISION_ID + 1";
         selectGlobalStmtSQL =
-            "select REVISION_ID from "
-            + schemaObjectPrefix + "GLOBAL_REVISION";
+                "select REVISION_ID from "
+                        + schemaObjectPrefix + "GLOBAL_REVISION";
         insertRevisionStmtSQL =
-            "insert into " + schemaObjectPrefix + "JOURNAL"
-            + " (REVISION_ID, JOURNAL_ID, PRODUCER_ID, REVISION_DATA) "
-            + "values (?,?,?,?)";
+                "insert into " + schemaObjectPrefix + "JOURNAL"
+                        + " (REVISION_ID, JOURNAL_ID, PRODUCER_ID, REVISION_DATA) "
+                        + "values (?,?,?,?)";
         selectMinLocalRevisionStmtSQL =
-            "select MIN(REVISION_ID) from " + schemaObjectPrefix + "LOCAL_REVISIONS";
+                "select MIN(REVISION_ID) from " + schemaObjectPrefix + "LOCAL_REVISIONS";
         cleanRevisionStmtSQL =
-            "delete from " + schemaObjectPrefix + "JOURNAL " + "where REVISION_ID < ?";
+                "delete from " + schemaObjectPrefix + "JOURNAL " + "where REVISION_ID < ?";
         getLocalRevisionStmtSQL =
-            "select REVISION_ID from " + schemaObjectPrefix + "LOCAL_REVISIONS "
-            + "where JOURNAL_ID = ?";
+                "select REVISION_ID from " + schemaObjectPrefix + "LOCAL_REVISIONS "
+                        + "where JOURNAL_ID = ?";
         insertLocalRevisionStmtSQL =
-            "insert into " + schemaObjectPrefix + "LOCAL_REVISIONS "
-            + "(REVISION_ID, JOURNAL_ID) values (?,?)";
+                "insert into " + schemaObjectPrefix + "LOCAL_REVISIONS "
+                        + "(REVISION_ID, JOURNAL_ID) values (?,?)";
         updateLocalRevisionStmtSQL =
-            "update " + schemaObjectPrefix + "LOCAL_REVISIONS "
-            + "set REVISION_ID = ? where JOURNAL_ID = ?";
+                "update " + schemaObjectPrefix + "LOCAL_REVISIONS "
+                        + "set REVISION_ID = ? where JOURNAL_ID = ?";
     }
 
     public String getDriver() {
@@ -557,10 +555,9 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
 
     /**
      * Get the database type.
-     * @deprecated
-     * This method is deprecated; {@link #getDatabaseType} should be used instead.
      *
      * @return the database type
+     * @deprecated This method is deprecated; {@link #getDatabaseType} should be used instead.
      */
     public String getSchema() {
         return databaseType;
@@ -609,10 +606,9 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
 
     /**
      * Set the database type.
-    * @deprecated
-    * This method is deprecated; {@link #getDatabaseType} should be used instead.
      *
      * @param databaseType the database type
+     * @deprecated This method is deprecated; {@link #getDatabaseType} should be used instead.
      */
     public void setSchema(String databaseType) {
         this.databaseType = databaseType;
@@ -724,6 +720,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
             }
         }
 
+        @Override
         public synchronized long get() {
             if (!initialized) {
                 throw new IllegalStateException("instance has not yet been initialized");
@@ -731,6 +728,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
             return localRevision;
         }
 
+        @Override
         public synchronized void set(long localRevision) throws JournalException {
 
             if (!initialized) {
@@ -747,6 +745,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
             }
         }
 
+        @Override
         public void close() {
             // nothing to do
         }
@@ -762,6 +761,7 @@ public class DatabaseJournal extends AbstractJournal implements DatabaseAware{
         /**
          * {@inheritDoc}
          */
+        @Override
         public void run() {
             while (!Thread.currentThread().isInterrupted()) {
                 try {

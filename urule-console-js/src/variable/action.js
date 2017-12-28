@@ -12,10 +12,15 @@ export const GENERATED_FIELDS='generated_fields';
 export const IMPORT_FIELDS='IMPORT_FIELDS';
 export const SAVE='save';
 export const SAVE_COMPLETED='save_completed';
+export const ADD_MASTER_ROWS="add_master_rows";
 
 export function save(newVersion,file){
     return {newVersion,file,type:SAVE};
 };
+
+export function addMasterRows(rows){
+    return {masterRowData:rows,type:ADD_MASTER_ROWS};
+}
 
 export function saveData(data,newVersion,file) {
     let xml='<?xml version="1.0" encoding="utf-8"?>';

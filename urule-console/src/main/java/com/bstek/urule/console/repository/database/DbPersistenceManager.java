@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2017 Bstek
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -15,23 +15,7 @@
  ******************************************************************************/
 package com.bstek.urule.console.repository.database;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FilterInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.jcr.RepositoryException;
-import javax.sql.DataSource;
-
+import com.bstek.urule.console.repository.RepositoryBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.jackrabbit.core.fs.FileSystem;
 import org.apache.jackrabbit.core.fs.FileSystemResource;
@@ -42,28 +26,26 @@ import org.apache.jackrabbit.core.persistence.PMContext;
 import org.apache.jackrabbit.core.persistence.bundle.AbstractBundlePersistenceManager;
 import org.apache.jackrabbit.core.persistence.pool.BundleDbPersistenceManager;
 import org.apache.jackrabbit.core.persistence.pool.DbNameIndex;
-import org.apache.jackrabbit.core.persistence.util.BLOBStore;
-import org.apache.jackrabbit.core.persistence.util.BundleBinding;
-import org.apache.jackrabbit.core.persistence.util.ErrorHandling;
-import org.apache.jackrabbit.core.persistence.util.FileSystemBLOBStore;
-import org.apache.jackrabbit.core.persistence.util.NodeInfo;
-import org.apache.jackrabbit.core.persistence.util.NodePropBundle;
-import org.apache.jackrabbit.core.persistence.util.Serializer;
+import org.apache.jackrabbit.core.persistence.util.*;
 import org.apache.jackrabbit.core.state.ChangeLog;
 import org.apache.jackrabbit.core.state.ItemStateException;
 import org.apache.jackrabbit.core.state.NoSuchItemStateException;
 import org.apache.jackrabbit.core.state.NodeReferences;
 import org.apache.jackrabbit.core.util.StringIndex;
-import org.apache.jackrabbit.core.util.db.CheckSchemaOperation;
-import org.apache.jackrabbit.core.util.db.ConnectionFactory;
-import org.apache.jackrabbit.core.util.db.ConnectionHelper;
-import org.apache.jackrabbit.core.util.db.DatabaseAware;
-import org.apache.jackrabbit.core.util.db.DbUtility;
-import org.apache.jackrabbit.core.util.db.StreamWrapper;
+import org.apache.jackrabbit.core.util.db.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.bstek.urule.console.repository.RepositoryBuilder;
+import javax.jcr.RepositoryException;
+import javax.sql.DataSource;
+import java.io.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Jacky.gao
@@ -71,55 +53,89 @@ import com.bstek.urule.console.repository.RepositoryBuilder;
  */
 public class DbPersistenceManager extends AbstractBundlePersistenceManager implements DatabaseAware {
 
-    /** the default logger */
+    /**
+     * the default logger
+     */
     private static Logger log = LoggerFactory.getLogger(BundleDbPersistenceManager.class);
 
-    /** storage model modifier: binary keys */
+    /**
+     * storage model modifier: binary keys
+     */
     public static final int SM_BINARY_KEYS = 1;
 
-    /** storage model modifier: longlong keys */
+    /**
+     * storage model modifier: longlong keys
+     */
     public static final int SM_LONGLONG_KEYS = 2;
 
-    /** flag indicating if this manager was initialized */
+    /**
+     * flag indicating if this manager was initialized
+     */
     protected boolean initialized;
 
-    /** the jdbc driver name */
+    /**
+     * the jdbc driver name
+     */
     protected String driver;
 
-    /** the jdbc url string */
+    /**
+     * the jdbc url string
+     */
     protected String url;
 
-    /** the jdbc user */
+    /**
+     * the jdbc user
+     */
     protected String user;
 
-    /** the jdbc password */
+    /**
+     * the jdbc password
+     */
     protected String password;
 
-    /** the database type */
+    /**
+     * the database type
+     */
     protected String databaseType;
 
-    /** the logical name of the data source to use */
+    /**
+     * the logical name of the data source to use
+     */
     protected String dataSourceName;
 
-    /** the {@link ConnectionHelper} set in the {@link #init(PMContext)} method */
+    /**
+     * the {@link ConnectionHelper} set in the {@link #init(PMContext)} method
+     */
     protected ConnectionHelper conHelper;
 
-    /** the prefix for the database objects */
+    /**
+     * the prefix for the database objects
+     */
     protected String schemaObjectPrefix;
 
-    /** flag indicating if a consistency check should be issued during startup */
+    /**
+     * flag indicating if a consistency check should be issued during startup
+     */
     protected boolean consistencyCheck;
 
-    /** flag indicating if the consistency check should attempt to fix issues */
+    /**
+     * flag indicating if the consistency check should attempt to fix issues
+     */
     protected boolean consistencyFix;
 
-    /** initial size of buffer used to serialize objects */
+    /**
+     * initial size of buffer used to serialize objects
+     */
     protected static final int INITIAL_BUFFER_SIZE = 1024;
 
-    /** indicates if uses (filesystem) blob store */
+    /**
+     * indicates if uses (filesystem) blob store
+     */
     protected boolean externalBLOBs;
 
-    /** indicates whether to block if the database connection is lost */
+    /**
+     * indicates whether to block if the database connection is lost
+     */
     protected boolean blockOnConnectionLoss;
 
     // SQL statements for bundle management
@@ -138,14 +154,19 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
     protected String nodeReferenceSelectSQL;
     protected String nodeReferenceDeleteSQL;
 
-    /** file system where BLOB data is stored */
+    /**
+     * file system where BLOB data is stored
+     */
     protected CloseableBLOBStore blobStore;
 
-    /** the index for local names */
+    /**
+     * the index for local names
+     */
     private StringIndex nameIndex;
 
     /**
      * the minimum size of a property until it gets written to the blob store
+     *
      * @see #setMinBlobSize(String)
      */
     private int minBlobSize = 0x1000;
@@ -169,8 +190,8 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
      * Whether the schema check must be done during initialization.
      */
     private boolean schemaCheckEnabled = true;
-/*
-    *//**
+    /*
+     *//**
      * The repositories {@link ConnectionFactory}.
      *//*
     private ConnectionFactory connectionFactory;*/
@@ -178,12 +199,14 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
         //this.connectionFactory = connectionFactory;
     }
 
     /**
      * Returns the configured JDBC connection url.
+     *
      * @return the configured JDBC connection url.
      */
     public String getUrl() {
@@ -205,6 +228,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns the configured user that is used to establish JDBC connections.
+     *
      * @return the JDBC user.
      */
     public String getUser() {
@@ -213,6 +237,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Sets the user name that will be used to establish JDBC connections.
+     *
      * @param user the user name.
      */
     public void setUser(String user) {
@@ -221,6 +246,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns the configured password that is used to establish JDBC connections.
+     *
      * @return the password.
      */
     public String getPassword() {
@@ -229,6 +255,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Sets the password that will be used to establish JDBC connections.
+     *
      * @param password the password for the connection
      */
     public void setPassword(String password) {
@@ -237,6 +264,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns the class name of the JDBC driver.
+     *
      * @return the class name of the JDBC driver.
      */
     public String getDriver() {
@@ -256,6 +284,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns the configured schema object prefix.
+     *
      * @return the configured schema object prefix.
      */
     public String getSchemaObjectPrefix() {
@@ -276,10 +305,9 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns the configured database type name.
-     * @deprecated
-     * This method is deprecated; {@link getDatabaseType} should be used instead.
-     * 
+     *
      * @return the database type name.
+     * @deprecated This method is deprecated; {@link getDatabaseType} should be used instead.
      */
     public String getSchema() {
         return databaseType;
@@ -287,6 +315,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns the configured database type name.
+     *
      * @return the database type name.
      */
     public String getDatabaseType() {
@@ -297,15 +326,14 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
      * Sets the database type. This identifier is used to load and execute
      * the respective .ddl resource in order to create the required schema
      * objects.
-     * @deprecated
-     * This method is deprecated; {@link setDatabaseType} should be used instead.
      *
      * @param databaseType database type name
+     * @deprecated This method is deprecated; {@link setDatabaseType} should be used instead.
      */
     public void setSchema(String databaseType) {
         this.databaseType = databaseType;
     }
-    
+
     /**
      * Sets the database type. This identifier is used to load and execute
      * the respective .ddl resource in order to create the required schema
@@ -327,6 +355,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns if uses external (filesystem) blob store.
+     *
      * @return if uses external (filesystem) blob store.
      */
     public boolean isExternalBLOBs() {
@@ -335,8 +364,9 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Sets the flag for external (filesystem) blob store usage.
+     *
      * @param externalBLOBs a value of "true" indicates that an external blob
-     *        store is to be used.
+     *                      store is to be used.
      */
     public void setExternalBLOBs(boolean externalBLOBs) {
         this.externalBLOBs = externalBLOBs;
@@ -344,6 +374,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Checks if consistency check is enabled.
+     *
      * @return <code>true</code> if consistency check is enabled.
      */
     public String getConsistencyCheck() {
@@ -352,6 +383,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Defines if a consistency check is to be performed on initialization.
+     *
      * @param consistencyCheck the consistency check flag.
      */
     public void setConsistencyCheck(String consistencyCheck) {
@@ -360,6 +392,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Checks if consistency fix is enabled.
+     *
      * @return <code>true</code> if consistency fix is enabled.
      */
     public String getConsistencyFix() {
@@ -378,6 +411,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns the minimum blob size in bytes.
+     *
      * @return the minimum blob size in bytes.
      */
     public String getMinBlobSize() {
@@ -406,6 +440,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns the error handling configuration of this manager
+     *
      * @return the error handling configuration of this manager
      */
     public String getErrorHandling() {
@@ -422,6 +457,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns <code>true</code> if the blobs are stored in the DB.
+     *
      * @return <code>true</code> if the blobs are stored in the DB.
      */
     public boolean useDbBlobStore() {
@@ -430,6 +466,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns <code>true</code> if the blobs are stored in the local fs.
+     *
      * @return <code>true</code> if the blobs are stored in the local fs.
      */
     public boolean useLocalFsBlobStore() {
@@ -452,11 +489,12 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Basically wraps a JDBC transaction around super.store().
-     * 
+     * <p>
      * FIXME: the retry logic is almost a duplicate of {@code ConnectionHelper.RetryManager}.
      */
+    @Override
     public synchronized void store(final ChangeLog changeLog) throws ItemStateException {
         int failures = 0;
         ItemStateException lastException = null;
@@ -513,6 +551,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init(PMContext context) throws Exception {
         if (initialized) {
             throw new IllegalStateException("already initialized");
@@ -520,8 +559,8 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
         super.init(context);
 
         conHelper = createConnectionHelper(getDataSource());
-        
-        this.name = context.getHomeDir().getName();        
+
+        this.name = context.getHomeDir().getName();
 
         // make sure schemaObjectPrefix consists of legal name characters only
         schemaObjectPrefix = conHelper.prepareDbIdentifier(schemaObjectPrefix);
@@ -546,19 +585,19 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
             // check all bundles
             checkConsistency(null, true, consistencyFix);
         }
-                
+
     }
 
     private DataSource getDataSource() throws Exception {
-    	setDatabaseType(RepositoryBuilder.databaseType);
-    	return RepositoryBuilder.datasource;
+        setDatabaseType(RepositoryBuilder.databaseType);
+        return RepositoryBuilder.datasource;
     }
 
     /**
      * This method is called from the {@link #init(PMContext)} method of this class and returns a
      * {@link ConnectionHelper} instance which is assigned to the {@code conHelper} field. Subclasses may
      * override it to return a specialized connection helper.
-     * 
+     *
      * @param dataSrc the {@link DataSource} of this persistence manager
      * @return a {@link ConnectionHelper}
      * @throws Exception on error
@@ -571,15 +610,15 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
      * This method is called from {@link #init(PMContext)} after the
      * {@link #createConnectionHelper(DataSource)} method, and returns a default {@link CheckSchemaOperation}.
      * Subclasses can overrride this implementation to get a customized implementation.
-     * 
+     *
      * @return a new {@link CheckSchemaOperation} instance
      */
     protected CheckSchemaOperation createCheckSchemaOperation() {
         InputStream in =
-            AbstractBundlePersistenceManager.class.getResourceAsStream(
-                    databaseType + ".ddl");
+                AbstractBundlePersistenceManager.class.getResourceAsStream(
+                        databaseType + ".ddl");
         return new CheckSchemaOperation(conHelper, in, schemaObjectPrefix + "BUNDLE").addVariableReplacement(
-            CheckSchemaOperation.SCHEMA_OBJECT_PREFIX_VARIABLE, schemaObjectPrefix);
+                CheckSchemaOperation.SCHEMA_OBJECT_PREFIX_VARIABLE, schemaObjectPrefix);
     }
 
     /**
@@ -592,6 +631,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Creates a suitable blobstore
+     *
      * @return a blobstore
      * @throws Exception if an unspecified error occurs
      */
@@ -605,9 +645,11 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns the local name index
+     *
      * @return the local name index
      * @throws IllegalStateException if an error occurs.
      */
+    @Override
     public StringIndex getNameIndex() {
         try {
             if (nameIndex == null) {
@@ -622,7 +664,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
             return nameIndex;
         } catch (Exception e) {
             IllegalStateException exception =
-                new IllegalStateException("Unable to create nsIndex");
+                    new IllegalStateException("Unable to create nsIndex");
             exception.initCause(e);
             throw exception;
         }
@@ -630,6 +672,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * Returns a new instance of a DbNameIndex.
+     *
      * @return a new instance of a DbNameIndex.
      * @throws SQLException if an SQL error occurs.
      */
@@ -639,6 +682,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * returns the storage model
+     *
      * @return the storage model
      */
     public int getStorageModel() {
@@ -670,7 +714,6 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
      * init if {@link #useDbBlobStore()} returns <code>true</code>.
      *
      * @param context the persistence manager context
-     *
      * @return a blob store
      * @throws Exception if an error occurs.
      */
@@ -682,6 +725,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void close() throws Exception {
         if (!initialized) {
             throw new IllegalStateException("not initialized");
@@ -690,7 +734,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
         try {
             if (nameIndex instanceof DbNameIndex) {
                 ((DbNameIndex) nameIndex).close();
-            }            
+            }
             // close blob store
             blobStore.close();
             blobStore = null;
@@ -709,10 +753,10 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
      */
     protected Object[] getKey(NodeId id) {
         if (getStorageModel() == SM_BINARY_KEYS) {
-            return new Object[] { id.getRawBytes() };
+            return new Object[]{id.getRawBytes()};
         } else {
-            return new Object[] {
-                    id.getMostSignificantBits(), id.getLeastSignificantBits() };
+            return new Object[]{
+                    id.getMostSignificantBits(), id.getLeastSignificantBits()};
         }
     }
 
@@ -720,8 +764,8 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
      * Creates a parameter array for an SQL statement that needs
      * (i) a node identifier, and (2) another parameter.
      *
-     * @param id the node id
-     * @param p the other parameter
+     * @param id     the node id
+     * @param p      the other parameter
      * @param before whether the other parameter should be before the uuid parameter
      * @return an Object array that represents the parameters
      */
@@ -752,6 +796,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized List<NodeId> getAllNodeIds(NodeId bigger, int maxCount)
             throws ItemStateException, RepositoryException {
         ResultSet rs = null;
@@ -764,7 +809,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
                 lowId = bigger;
                 keys = getKey(bigger);
             }
-            if (getStorageModel() == SM_LONGLONG_KEYS  && maxCount > 0) {
+            if (getStorageModel() == SM_LONGLONG_KEYS && maxCount > 0) {
                 // get some more rows, in case the first row is smaller
                 // only required for SM_LONGLONG_KEYS
                 // probability is very low to get get the wrong first key, < 1 : 2^64
@@ -861,7 +906,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
     protected NodePropBundle loadBundle(NodeId id) throws ItemStateException {
         try {
             ResultSet rs =
-                conHelper.exec(bundleSelectSQL, getKey(id), false, 0);
+                    conHelper.exec(bundleSelectSQL, getKey(id), false, 0);
             try {
                 if (rs != null && rs.next()) {
                     return readBundle(id, rs, 1);
@@ -869,12 +914,12 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
                     return null;
                 }
             } finally {
-            	if (rs != null) {
-            		rs.close();
-            	}
+                if (rs != null) {
+                    rs.close();
+                }
             }
         } catch (SQLException e) {
-        	String msg = "failed to read bundle (stacktrace on DEBUG log level): " + id + ": " + e; 
+            String msg = "failed to read bundle (stacktrace on DEBUG log level): " + id + ": " + e;
             log.error(msg);
             log.debug("failed to read bundle: " + id, e);
             throw new ItemStateException(msg, e);
@@ -886,8 +931,8 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
      * current row of the given result set. This is a helper method to
      * circumvent issues JCR-1039 and JCR-1474.
      *
-     * @param id bundle identifier
-     * @param rs result set
+     * @param id     bundle identifier
+     * @param rs     result set
      * @param column BLOB column
      * @return parsed bundle
      * @throws SQLException if the bundle can not be read or parsed
@@ -908,7 +953,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
             }
         } catch (IOException e) {
             SQLException exception =
-                new SQLException("Failed to parse bundle " + id);
+                    new SQLException("Failed to parse bundle " + id);
             exception.initCause(e);
             throw exception;
         }
@@ -917,10 +962,11 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
     /**
      * {@inheritDoc}
      */
+    @Override
     protected synchronized void storeBundle(NodePropBundle bundle) throws ItemStateException {
         try {
             ByteArrayOutputStream out =
-                new ByteArrayOutputStream(INITIAL_BUFFER_SIZE);
+                    new ByteArrayOutputStream(INITIAL_BUFFER_SIZE);
             binding.writeBundle(out, bundle);
 
             String sql = bundle.isNew() ? bundleInsertSQL : bundleUpdateSQL;
@@ -941,11 +987,12 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
             log.error(msg, e);
             throw new ItemStateException(msg, e);
         }
-   }
+    }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected synchronized void destroyBundle(NodePropBundle bundle) throws ItemStateException {
         try {
             conHelper.update(bundleDeleteSQL, getKey(bundle.getId()));
@@ -962,6 +1009,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized NodeReferences loadReferencesTo(NodeId targetId)
             throws NoSuchItemStateException, ItemStateException {
         if (!initialized) {
@@ -996,13 +1044,14 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * This method uses shared <code>PreparedStatements</code>, which must
      * be used strictly sequentially. Because this method synchronizes on the
      * persistence manager instance, there is no need to synchronize on the
      * shared statement. If the method would not be synchronized, the shared
      * statement must be synchronized.
      */
+    @Override
     public synchronized void store(NodeReferences refs) throws ItemStateException {
         if (!initialized) {
             throw new IllegalStateException("not initialized");
@@ -1020,7 +1069,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
 
             Object[] params = createParams(refs.getTargetId(), out.toByteArray(), true);
             conHelper.exec(sql, params);
-            
+
             // there's no need to close a ByteArrayOutputStream
             //out.close();
         } catch (Exception e) {
@@ -1033,6 +1082,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void destroy(NodeReferences refs) throws ItemStateException {
         if (!initialized) {
             throw new IllegalStateException("not initialized");
@@ -1053,6 +1103,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized boolean existsReferencesTo(NodeId targetId) throws ItemStateException {
         if (!initialized) {
             throw new IllegalStateException("not initialized");
@@ -1066,7 +1117,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
             return rs.next();
         } catch (Exception e) {
             String msg = "failed to check existence of node references: "
-                + targetId;
+                    + targetId;
             log.error(msg, e);
             throw new ItemStateException(msg, e);
         } finally {
@@ -1074,6 +1125,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
         }
     }
 
+    @Override
     public String toString() {
         return name;
     }
@@ -1105,22 +1157,22 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
             bundleDeleteSQL = "delete from " + schemaObjectPrefix + "BUNDLE where NODE_ID_HI = ? and NODE_ID_LO = ?";
 
             nodeReferenceInsertSQL =
-                "insert into " + schemaObjectPrefix + "REFS"
-                + " (REFS_DATA, NODE_ID_HI, NODE_ID_LO) values (?, ?, ?)";
+                    "insert into " + schemaObjectPrefix + "REFS"
+                            + " (REFS_DATA, NODE_ID_HI, NODE_ID_LO) values (?, ?, ?)";
             nodeReferenceUpdateSQL =
-                "update " + schemaObjectPrefix + "REFS"
-                + " set REFS_DATA = ? where NODE_ID_HI = ? and NODE_ID_LO = ?";
+                    "update " + schemaObjectPrefix + "REFS"
+                            + " set REFS_DATA = ? where NODE_ID_HI = ? and NODE_ID_LO = ?";
             nodeReferenceSelectSQL = "select REFS_DATA from " + schemaObjectPrefix + "REFS where NODE_ID_HI = ? and NODE_ID_LO = ?";
             nodeReferenceDeleteSQL = "delete from " + schemaObjectPrefix + "REFS where NODE_ID_HI = ? and NODE_ID_LO = ?";
 
-            bundleSelectAllIdsSQL = "select NODE_ID_HI, NODE_ID_LO from " + schemaObjectPrefix 
-                + "BUNDLE ORDER BY NODE_ID_HI, NODE_ID_LO";
+            bundleSelectAllIdsSQL = "select NODE_ID_HI, NODE_ID_LO from " + schemaObjectPrefix
+                    + "BUNDLE ORDER BY NODE_ID_HI, NODE_ID_LO";
             // need to use HI and LO parameters
             // this is not the exact statement, but not all databases support WHERE (NODE_ID_HI, NODE_ID_LOW) >= (?, ?)
             bundleSelectAllIdsFromSQL =
-                "select NODE_ID_HI, NODE_ID_LO from " + schemaObjectPrefix + "BUNDLE"
-                + " WHERE (NODE_ID_HI >= ?) AND (? IS NOT NULL)"
-                + " ORDER BY NODE_ID_HI, NODE_ID_LO";
+                    "select NODE_ID_HI, NODE_ID_LO from " + schemaObjectPrefix + "BUNDLE"
+                            + " WHERE (NODE_ID_HI >= ?) AND (? IS NOT NULL)"
+                            + " ORDER BY NODE_ID_HI, NODE_ID_LO";
 
             bundleSelectAllBundlesSQL = "select NODE_ID_HI, NODE_ID_LO, BUNDLE_DATA from " + schemaObjectPrefix
                     + "BUNDLE ORDER BY NODE_ID_HI, NODE_ID_LO";
@@ -1155,10 +1207,12 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
             this.fs = fs;
         }
 
+        @Override
         public String createId(PropertyId id, int index) {
             return buildBlobFilePath(null, id, index).toString();
         }
 
+        @Override
         public void close() {
             try {
                 fs.close();
@@ -1191,6 +1245,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
         /**
          * {@inheritDoc}
          */
+        @Override
         public String createId(PropertyId id, int index) {
             StringBuilder buf = new StringBuilder();
             buf.append(id.getParentId().toString());
@@ -1206,6 +1261,7 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
         /**
          * {@inheritDoc}
          */
+        @Override
         public InputStream get(String blobId) throws Exception {
             ResultSet rs = null;
             boolean close = true;
@@ -1222,11 +1278,12 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
                     return new ByteArrayInputStream(new byte[0]);
                 }
 
-                 // return an InputStream wrapper in order to close the ResultSet when the stream is closed
+                // return an InputStream wrapper in order to close the ResultSet when the stream is closed
                 close = false;
                 final ResultSet rs2 = rs;
                 return new FilterInputStream(in) {
 
+                    @Override
                     public void close() throws IOException {
                         try {
                             in.close();
@@ -1246,17 +1303,18 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
         /**
          * {@inheritDoc}
          */
+        @Override
         public synchronized void put(String blobId, InputStream in, long size)
                 throws Exception {
             ResultSet rs = null;
             boolean exists;
-                try {
-                    rs = conHelper.exec(blobSelectExistSQL, new Object[]{blobId}, false, 0);
-                    // a BLOB exists if the result has at least one entry
-                    exists = rs.next();
-                } finally {
-                    DbUtility.close(rs);
-                }
+            try {
+                rs = conHelper.exec(blobSelectExistSQL, new Object[]{blobId}, false, 0);
+                // a BLOB exists if the result has at least one entry
+                exists = rs.next();
+            } finally {
+                DbUtility.close(rs);
+            }
             String sql = (exists) ? blobUpdateSQL : blobInsertSQL;
             Object[] params = new Object[]{new StreamWrapper(in, size), blobId};
             conHelper.exec(sql, params);
@@ -1265,10 +1323,12 @@ public class DbPersistenceManager extends AbstractBundlePersistenceManager imple
         /**
          * {@inheritDoc}
          */
+        @Override
         public synchronized boolean remove(String blobId) throws Exception {
             return conHelper.update(blobDeleteSQL, new Object[]{blobId}) == 1;
         }
 
+        @Override
         public void close() {
             // closing the database resources of this blobstore is left to the
             // owning BundleDbPersistenceManager

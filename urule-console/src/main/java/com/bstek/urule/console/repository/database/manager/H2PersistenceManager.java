@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2017 Bstek
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -15,9 +15,8 @@
  ******************************************************************************/
 package com.bstek.urule.console.repository.database.manager;
 
-import org.apache.jackrabbit.core.persistence.PMContext;
-
 import com.bstek.urule.console.repository.database.DbPersistenceManager;
+import org.apache.jackrabbit.core.persistence.PMContext;
 
 /**
  * @author Jacky.gao
@@ -25,11 +24,14 @@ import com.bstek.urule.console.repository.database.DbPersistenceManager;
  */
 public class H2PersistenceManager extends DbPersistenceManager {
 
-    /** the lock time out. see*/
+    /**
+     * the lock time out. see
+     */
     private long lockTimeout = 10000;
 
     /**
      * Returns the lock timeout.
+     *
      * @return the lock timeout
      */
     public String getLockTimeout() {
@@ -38,6 +40,7 @@ public class H2PersistenceManager extends DbPersistenceManager {
 
     /**
      * Sets the lock timeout in milliseconds.
+     *
      * @param lockTimeout the lock timeout.
      */
     public void setLockTimeout(String lockTimeout) {
@@ -47,7 +50,8 @@ public class H2PersistenceManager extends DbPersistenceManager {
     /**
      * {@inheritDoc}
      */
-   public void init(PMContext context) throws Exception {
+    @Override
+    public void init(PMContext context) throws Exception {
         // init default values
         if (getDriver() == null) {
             setDriver("org.h2.Driver");
@@ -63,7 +67,7 @@ public class H2PersistenceManager extends DbPersistenceManager {
         }
 
         super.init(context);
-        
+
         conHelper.exec("SET LOCK_TIMEOUT " + lockTimeout);
     }
 }

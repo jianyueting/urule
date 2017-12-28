@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2017 Bstek
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -15,16 +15,14 @@
  ******************************************************************************/
 package com.bstek.urule.console.repository.database.manager;
 
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
+import com.bstek.urule.console.repository.database.DbPersistenceManager;
 import org.apache.jackrabbit.core.persistence.PMContext;
 import org.apache.jackrabbit.core.persistence.pool.BundleDbPersistenceManager;
 import org.apache.jackrabbit.core.util.db.ConnectionHelper;
 import org.apache.jackrabbit.core.util.db.DerbyConnectionHelper;
 
-import com.bstek.urule.console.repository.database.DbPersistenceManager;
+import javax.sql.DataSource;
+import java.sql.SQLException;
 
 /**
  * @author Jacky.gao
@@ -32,27 +30,39 @@ import com.bstek.urule.console.repository.database.DbPersistenceManager;
  */
 public class DerbyPersistenceManager extends DbPersistenceManager {
 
-    /** name of the embedded driver */
+    /**
+     * name of the embedded driver
+     */
     public static final String DERBY_EMBEDDED_DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
 
-    /** @see #setDerbyStorageInitialPages(String) */
+    /**
+     * @see #setDerbyStorageInitialPages(String)
+     */
     private int derbyStorageInitialPages = 16;
 
-    /** @see #setDerbyStorageMinimumRecordSize(String) */
+    /**
+     * @see #setDerbyStorageMinimumRecordSize(String)
+     */
     private int derbyStorageMinimumRecordSize = 512;
 
-    /** @see #setDerbyStoragePageCacheSize(String) */
+    /**
+     * @see #setDerbyStoragePageCacheSize(String)
+     */
     private int derbyStoragePageCacheSize = 1024;
 
-    /** @see #setDerbyStoragePageReservedSpace(String) */
+    /**
+     * @see #setDerbyStoragePageReservedSpace(String)
+     */
     private int derbyStoragePageReservedSpace = 20;
 
-    /** @see #setDerbyStoragePageSize(String) */
+    /**
+     * @see #setDerbyStoragePageSize(String)
+     */
     private int derbyStoragePageSize = 16384;
 
     /**
-     * @see #setDerbyStorageInitialPages
      * @return the initial pages property
+     * @see #setDerbyStorageInitialPages
      */
     public String getDerbyStorageInitialPages() {
         return String.valueOf(derbyStorageInitialPages);
@@ -94,8 +104,8 @@ public class DerbyPersistenceManager extends DbPersistenceManager {
     }
 
     /**
-     * @see #setDerbyStorageMinimumRecordSize
      * @return the minimum record size
+     * @see #setDerbyStorageMinimumRecordSize
      */
     public String getDerbyStorageMinimumRecordSize() {
         return String.valueOf(derbyStorageMinimumRecordSize);
@@ -122,8 +132,8 @@ public class DerbyPersistenceManager extends DbPersistenceManager {
     }
 
     /**
-     * @see #setDerbyStoragePageCacheSize
      * @return the page cache size
+     * @see #setDerbyStoragePageCacheSize
      */
     public String getDerbyStoragePageCacheSize() {
         return String.valueOf(derbyStoragePageCacheSize);
@@ -160,8 +170,8 @@ public class DerbyPersistenceManager extends DbPersistenceManager {
 
 
     /**
-     * @see #setDerbyStoragePageReservedSpace
      * @return the page reserved space
+     * @see #setDerbyStoragePageReservedSpace
      */
     public String getDerbyStoragePageReservedSpace() {
         return String.valueOf(derbyStoragePageReservedSpace);
@@ -190,8 +200,8 @@ public class DerbyPersistenceManager extends DbPersistenceManager {
     }
 
     /**
-     * @see #setDerbyStoragePageSize
      * @return the page size
+     * @see #setDerbyStoragePageSize
      */
     public String getDerbyStoragePageSize() {
         return String.valueOf(derbyStoragePageSize);
@@ -215,6 +225,7 @@ public class DerbyPersistenceManager extends DbPersistenceManager {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init(PMContext context) throws Exception {
         // init default values
         if (getDriver() == null) {
@@ -255,11 +266,12 @@ public class DerbyPersistenceManager extends DbPersistenceManager {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Since Derby cannot handle binary indexes, we use long-long keys.
      *
      * @return {@link BundleDbPersistenceManager#SM_LONGLONG_KEYS}
      */
+    @Override
     public int getStorageModel() {
         return BundleDbPersistenceManager.SM_LONGLONG_KEYS;
     }
@@ -270,6 +282,7 @@ public class DerbyPersistenceManager extends DbPersistenceManager {
      *
      * @throws SQLException if an error occurs
      */
+    @Override
     public void close() throws Exception {
         super.close();
         ((DerbyConnectionHelper) conHelper).shutDown(getDriver());

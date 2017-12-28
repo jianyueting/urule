@@ -39,7 +39,7 @@ import static com.bstek.urule.Utils.getDatatypeFromClass;
 public class ActionServletHandler extends RenderPageServletHandler {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String method = retriveMethod(req);
+        String method = retrieveMethod(req);
         if (method != null) {
             invokeMethod(method, req, resp);
         } else {

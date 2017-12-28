@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2017 Bstek
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -15,9 +15,8 @@
  ******************************************************************************/
 package com.bstek.urule.console.repository.database.manager;
 
-import org.apache.jackrabbit.core.util.db.CheckSchemaOperation;
-
 import com.bstek.urule.console.repository.database.DbPersistenceManager;
+import org.apache.jackrabbit.core.util.db.CheckSchemaOperation;
 
 /**
  * @author Jacky.gao
@@ -25,7 +24,9 @@ import com.bstek.urule.console.repository.database.DbPersistenceManager;
  */
 public class MSSqlPersistenceManager extends DbPersistenceManager {
 
-    /** the MS SQL table space to use */
+    /**
+     * the MS SQL table space to use
+     */
     protected String tableSpace = "";
 
     public MSSqlPersistenceManager() {
@@ -39,12 +40,12 @@ public class MSSqlPersistenceManager extends DbPersistenceManager {
     @Override
     protected CheckSchemaOperation createCheckSchemaOperation() {
         return super.createCheckSchemaOperation().addVariableReplacement(
-            CheckSchemaOperation.TABLE_SPACE_VARIABLE, tableSpace);
+                CheckSchemaOperation.TABLE_SPACE_VARIABLE, tableSpace);
     }
 
     /**
      * Returns the configured MS SQL table space.
-     * 
+     *
      * @return the configured MS SQL table space.
      */
     public String getTableSpace() {
@@ -53,7 +54,7 @@ public class MSSqlPersistenceManager extends DbPersistenceManager {
 
     /**
      * Sets the MS SQL table space.
-     * 
+     *
      * @param tableSpace the MS SQL table space.
      */
     public void setTableSpace(String tableSpace) {
