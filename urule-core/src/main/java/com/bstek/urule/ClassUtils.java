@@ -24,9 +24,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.YearMonth;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -36,8 +33,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static com.bstek.urule.Utils.getDatatypeFromClass;
 
 /**
  * @author Jacky.gao
@@ -110,7 +110,7 @@ public class ClassUtils {
             for (PropertyDescriptor pd : pds) {
                 Variable variable = new Variable();
                 Class<?> type = pd.getPropertyType();
-                Datatype dataType = getDateType(type);
+                Datatype dataType = getDatatypeFromClass(type);
                 String propertyName = pd.getName();
                 String label = getPropertyAnnotationLabel(cls, propertyName);
                 String name = path + pd.getName();
@@ -147,48 +147,4 @@ public class ClassUtils {
         return null;
     }
 
-    private static Datatype getDateType(Class<?> type) {
-        if (String.class.isAssignableFrom(type)) {
-            return Datatype.String;
-        } else if (Boolean.class.isAssignableFrom(type)
-                || boolean.class.isAssignableFrom(type)) {
-            return Datatype.Boolean;
-        } else if (Integer.class.isAssignableFrom(type)
-                || int.class.isAssignableFrom(type)) {
-            return Datatype.Integer;
-        } else if (Float.class.isAssignableFrom(type)
-                || float.class.isAssignableFrom(type)) {
-            return Datatype.Float;
-        } else if (Long.class.isAssignableFrom(type)
-                || long.class.isAssignableFrom(type)) {
-            return Datatype.Long;
-        } else if (BigDecimal.class.isAssignableFrom(type)) {
-            return Datatype.BigDecimal;
-        } else if (Double.class.isAssignableFrom(type)
-                || double.class.isAssignableFrom(type)) {
-            return Datatype.Double;
-        } else if (Date.class.isAssignableFrom(type)) {
-            return Datatype.Date;
-        } else if (Date.class.isAssignableFrom(type)) {
-            return Datatype.Date;
-        } else if (List.class.isAssignableFrom(type)) {
-            return Datatype.List;
-        } else if (Map.class.isAssignableFrom(type)) {
-            return Datatype.Map;
-        } else if (Set.class.isAssignableFrom(type)) {
-            return Datatype.Set;
-        } else if (Enum.class.isAssignableFrom(type)) {
-            return Datatype.Enum;
-        } else if (Character.class.isAssignableFrom(type) || char.class.isAssignableFrom(type)) {
-            return Datatype.Char;
-        } else if (LocalDateTime.class.isAssignableFrom(type)) {
-            return Datatype.LocalDateTime;
-        } else if (LocalDate.class.isAssignableFrom(type)) {
-            return Datatype.LocalDate;
-        } else if (YearMonth.class.isAssignableFrom(type)) {
-            return Datatype.YearMonth;
-        } else {
-            return Datatype.Object;
-        }
-    }
 }

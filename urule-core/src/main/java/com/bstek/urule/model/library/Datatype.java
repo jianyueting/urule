@@ -250,15 +250,6 @@ public enum Datatype {
                 return null;
         }
     }
-
-    private Date parseDate(String string, String format) {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-            return dateFormat.parse(string);
-        } catch (ParseException e) {
-            throw new RuleException(e);
-        }
-    }
 }
 
 class HashMapTypeReference extends TypeReference<HashMap<String, Object>> {

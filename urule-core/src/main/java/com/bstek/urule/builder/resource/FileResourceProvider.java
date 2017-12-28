@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2017 Bstek
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -15,39 +15,41 @@
  ******************************************************************************/
 package com.bstek.urule.builder.resource;
 
-import java.io.IOException;
-import java.io.InputStream;
-
+import com.bstek.urule.RuleException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.bstek.urule.RuleException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Jacky.gao
  * @since 2014年12月22日
  */
-public class FileResourceProvider implements ResourceProvider,ApplicationContextAware {
-	private ApplicationContext applicationContext;
-	
-	@Override
-	public Resource provide(String path,String version) {
-		try {
-			InputStream inputStream=applicationContext.getResource(path).getInputStream();
-			String content=IOUtils.toString(inputStream,"utf-8");
-			IOUtils.closeQuietly(inputStream);
-			return new Resource(content,path);
-		} catch (IOException e) {
-			throw new RuleException(e);
-		}
-	}
+public class FileResourceProvider implements ResourceProvider, ApplicationContextAware {
+    private ApplicationContext applicationContext;
 
-	public boolean support(String path) {
-		return path.startsWith("classpath:") || path.startsWith("file:") || path.startsWith("WEB-INF/");
-	}
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext=applicationContext;
-	}
+    @Override
+    public Resource provide(String path, String version) {
+        try {
+            InputStream inputStream = applicationContext.getResource(path).getInputStream();
+            String content = IOUtils.toString(inputStream, "utf-8");
+            IOUtils.closeQuietly(inputStream);
+            return new Resource(content, path);
+        } catch (IOException e) {
+            throw new RuleException(e);
+        }
+    }
+
+    @Override
+    public boolean support(String path) {
+        return path.startsWith("classpath:") || path.startsWith("file:") || path.startsWith("WEB-INF/");
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 }

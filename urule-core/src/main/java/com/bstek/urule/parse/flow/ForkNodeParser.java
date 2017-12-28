@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2017 Bstek
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -15,26 +15,28 @@
  ******************************************************************************/
 package com.bstek.urule.parse.flow;
 
-import org.dom4j.Element;
-
 import com.bstek.urule.model.flow.ForkNode;
+import org.dom4j.Element;
 
 /**
  * @author Jacky.gao
  * @since 2014年12月23日
  */
 public class ForkNodeParser extends FlowNodeParser<ForkNode> {
-	public ForkNode parse(Element element) {
-		ForkNode fork=new ForkNode(element.attributeValue("name"));
-		fork.setConnections(parseConnections(element));
-		fork.setEventBean(element.attributeValue("event-bean"));
-		fork.setX(element.attributeValue("x"));
-		fork.setY(element.attributeValue("y"));
-		fork.setWidth(element.attributeValue("width"));
-		fork.setHeight(element.attributeValue("height"));
-		return fork;
-	}
-	public boolean support(String name) {
-		return name.equals("fork");
-	}
+    @Override
+    public ForkNode parse(Element element) {
+        ForkNode fork = new ForkNode(element.attributeValue("name"));
+        fork.setConnections(parseConnections(element));
+        fork.setEventBean(element.attributeValue("event-bean"));
+        fork.setX(element.attributeValue("x"));
+        fork.setY(element.attributeValue("y"));
+        fork.setWidth(element.attributeValue("width"));
+        fork.setHeight(element.attributeValue("height"));
+        return fork;
+    }
+
+    @Override
+    public boolean support(String name) {
+        return name.equals("fork");
+    }
 }

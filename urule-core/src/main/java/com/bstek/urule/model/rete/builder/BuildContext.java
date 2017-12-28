@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2017 Bstek
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -25,12 +25,19 @@ import com.bstek.urule.model.rule.lhs.BaseCriteria;
  * @since 2015年1月8日
  */
 public interface BuildContext {
-	String getObjectType(BaseCriteria criteria);
-	ObjectTypeNode getObjectTypeNode(BaseCriteria criteria);
-	boolean assertSameType(BaseCriteria left,BaseCriteria right);
-	ResourceLibrary getResourceLibrary();
-	ObjectTypeNode buildObjectTypeNode(String className);
-	int nextId();
-	void setCurrentRule(Rule rule);
-	boolean currentRuleIsDebug();
+    String getObjectType(BaseCriteria criteria);
+
+    ObjectTypeNode getObjectTypeNode(BaseCriteria criteria);
+
+    boolean assertSameType(BaseCriteria left, BaseCriteria right);
+
+    ResourceLibrary getResourceLibrary();
+
+    ObjectTypeNode buildObjectTypeNode(String className);
+
+    int nextId();
+
+    void setCurrentRule(Rule rule);
+
+    boolean currentRuleIsDebug();
 }
