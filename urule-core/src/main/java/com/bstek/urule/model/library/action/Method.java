@@ -49,7 +49,7 @@ public class Method {
 
     public void addParameter(Parameter parameter) {
         if (parameters == null) {
-            parameters = new ArrayList<Parameter>();
+            parameters = new ArrayList<>();
         }
         parameters.add(parameter);
     }

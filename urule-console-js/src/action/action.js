@@ -17,7 +17,11 @@ export const IMPORT_FIELDS='IMPORT_FIELDS';
 export const SAVE='save';
 export const SAVE_COMPLETED='save_completed';
 export const LOADED_BEAN_METHODS='loaded_bean_methods';
+export const ADD_MASTER_ROWS="add_master_rows";
 
+export function addMasterRows(rows){
+    return {masterRowData:rows,type:ADD_MASTER_ROWS};
+}
 
 export function save(newVersion,file){
     return {newVersion,file,type:SAVE};

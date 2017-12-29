@@ -15,15 +15,20 @@
  ******************************************************************************/
 package com.bstek.urule.console.servlet.action;
 
+import com.bstek.urule.ClassUtils;
+import com.bstek.urule.Utils;
 import com.bstek.urule.console.servlet.RenderPageServletHandler;
 import com.bstek.urule.model.ExposeAction;
 import com.bstek.urule.model.library.action.Method;
 import com.bstek.urule.model.library.action.Parameter;
+import com.bstek.urule.model.library.action.annotation.ActionBean;
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.springframework.aop.framework.AdvisedSupport;
 import org.springframework.aop.framework.AopProxy;
 import org.springframework.aop.support.AopUtils;
+import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,8 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.bstek.urule.Utils.getDatatypeFromClass;
 
@@ -52,6 +56,35 @@ public class ActionServletHandler extends RenderPageServletHandler {
             template.merge(context, writer);
             writer.close();
         }
+    }
+
+    public void loadActionBeans(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ApplicationContext context = Utils.getApplicationContext();
+        Map<String, Object> beanMap = context.getBeansWithAnnotation(ActionBean.class);
+        List<Map<String, Object>> list = new ArrayList<>();
+        Set<String> keySet = beanMap.keySet();
+        String customActionPackagePrefix = (String) Utils.getApplicationContext().getBean("customActionPackagePrefix");
+        String[] prefixes = customActionPackagePrefix.split(",");
+        for (String key : keySet) {
+            Object object = beanMap.get(key);
+            Class<?> clazz = object.getClass();
+            String packageName = clazz.getPackage().getName();
+            if (!StringUtils.startsWithAny(packageName, prefixes)) {
+                continue;
+            }
+
+            ActionBean actionBean = clazz.getAnnotation(ActionBean.class);
+            Map<String, Object> map = new HashMap<>(16);
+            map.put("id", key);
+            map.put("name", actionBean.name());
+            map.put("type", "Custom");
+
+            List<Method> methods = ClassUtils.classToMethods(object.getClass());
+
+            map.put("methods", methods);
+            list.add(map);
+        }
+        writeObjectToJson(response, list);
     }
 
     public void loadMethods(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

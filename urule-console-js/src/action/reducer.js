@@ -28,6 +28,11 @@ function master(state=[],action){
             var file=action.file;
             ACTIONS.saveData(data,newVersion,file);
             return state;
+        case ACTIONS.ADD_MASTER_ROWS:
+            var newData = [...state.data];
+            var masterRowData = action.masterRowData;
+            newData.push(...masterRowData);
+            return Object.assign({},state.prototype,{data:newData});
         default:
             return state;
     }

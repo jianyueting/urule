@@ -18,6 +18,10 @@ package com.bstek.urule;
 import com.bstek.urule.model.Const;
 import com.bstek.urule.model.Label;
 import com.bstek.urule.model.library.Datatype;
+import com.bstek.urule.model.library.action.Method;
+import com.bstek.urule.model.library.action.Parameter;
+import com.bstek.urule.model.library.action.annotation.ActionMethod;
+import com.bstek.urule.model.library.action.annotation.ActionMethodParameter;
 import com.bstek.urule.model.library.constant.Constant;
 import com.bstek.urule.model.library.variable.Act;
 import com.bstek.urule.model.library.variable.Variable;
@@ -93,6 +97,45 @@ public class ClassUtils {
         }
     }
 
+    public static List<Method> classToMethods(Class<?> cls) {
+        try {
+            List<Method> list = new ArrayList<>();
+            java.lang.reflect.Method[] methods = cls.getDeclaredMethods();
+
+            for (java.lang.reflect.Method method : methods) {
+                Class<?>[] parameterTypes = method.getParameterTypes();
+                ActionMethod actionMethod = method.getAnnotation(ActionMethod.class);
+                ActionMethodParameter actionMethodParameter = method.getAnnotation(ActionMethodParameter.class);
+                if (actionMethod != null && actionMethodParameter != null) {
+                    Method method1 = new Method();
+                    method1.setName(actionMethod.name());
+                    method1.setMethodName(method.getName());
+
+                    String[] names = actionMethodParameter.names();
+
+                    if (names.length != parameterTypes.length) {
+                        throw new RuntimeException("ActionMethodParameter注解参数个数不匹配");
+                    }
+
+                    for (int i = 0; i < names.length; i++) {
+                        String name = names[i];
+                        Class<?> type = parameterTypes[i];
+                        Parameter parameter = new Parameter();
+                        parameter.setName(name);
+                        parameter.setType(getDatatypeFromClass(type));
+                        method1.addParameter(parameter);
+                    }
+
+                    list.add(method1);
+                }
+            }
+
+            return list;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static List<Constant> classToConstant(Class<?> cls) {
         try {
             Object instance = cls.newInstance();
@@ -129,7 +172,7 @@ public class ClassUtils {
     }
 
     private static List<Variable> parseClass(String path, Class<?> cls, Collection<Class<?>> parsed) throws Exception {
-        List<Variable> variables = new ArrayList<Variable>();
+        List<Variable> variables = new ArrayList<>();
         BeanInfo beanInfo = Introspector.getBeanInfo(cls, Object.class);
         PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
 

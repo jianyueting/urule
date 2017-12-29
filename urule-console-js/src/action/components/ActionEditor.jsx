@@ -97,6 +97,23 @@ class ActionEditor extends Component{
                     <div>
                         <div style={{margin:'2px'}}>
                             <div className="btn-group btn-group-sm" style={{margin:'2px'}}>
+                                <button className="btn btn-primary" type="button" onClick={(e)=>{
+                                    var url = window._server + "/actioneditor/loadActionBeans";
+                                    $.ajax({
+                                        url,
+                                        type:'POST',
+                                        success:function (rows) {
+                                            dispatch(action.addMasterRows(rows));
+                                        },
+                                        error:function (response) {
+                                            if(response && response.responseText){
+                                                bootbox.alert("<span style='color: red'>加载数据失败,服务端错误："+response.responseText+"</span>");
+                                            }else{
+                                                bootbox.alert("<span style='color: red'>加载数据失败,服务端出错</span>");
+                                            }
+                                        }
+                                    });
+                                }}><i className="glyphicon glyphicon-refresh"></i> 扫描</button>
                                 <button className="btn btn-primary" type="button" onClick={(e)=>{dispatch(action.addMaster())}}><i className="glyphicon glyphicon-plus-sign"></i> 添加Bean</button>
                             </div>
                             <div className="btn-group btn-group-sm" style={{margin:'2px'}}>
