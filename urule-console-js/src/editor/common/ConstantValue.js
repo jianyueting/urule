@@ -42,7 +42,7 @@ urule.ConstantValue.prototype.initMenu=function(constantLibraries){
 		self.setValue({
 			constantCategory:menuItem.parent.parent.label,
 			constantLabel:menuItem.label,
-			constantName:menuItem.name
+			constantName:menuItem.value
 		});
 	};
 	config={menuItems:[]};
@@ -51,14 +51,14 @@ urule.ConstantValue.prototype.initMenu=function(constantLibraries){
 		$.each(categories,function(i,category){
 			var menuItem={
 				label:category.label
-			}
+			};
 			var constants=category["constants"];
 			$.each(constants,function(j,constant){
 				if(!menuItem.subMenu){
 					menuItem.subMenu={menuItems:[]};
 				}
 				menuItem.subMenu.menuItems.push({
-					name:constant.name,
+					value:constant.value,
 					label:constant.label,
 					onClick:onClick
 				});
