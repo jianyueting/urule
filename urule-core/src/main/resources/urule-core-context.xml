@@ -24,10 +24,6 @@
         <property name="decisionTreeRulesBuilder" ref="urule.decisionTreeRulesBuilder"/>
     </bean>
 
-    <bean id="customActionPackagePrefix" class="java.lang.String">
-        <constructor-arg value="${urule.customActionPackagePrefix}"/>
-    </bean>
-
     <bean id="urule.builtInActionLibraryBuilder" class="com.bstek.urule.runtime.BuiltInActionLibraryBuilder"/>
 
     <bean id="urule.rulesRebuilder" class="com.bstek.urule.builder.RulesRebuilder">

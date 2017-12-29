@@ -15,14 +15,12 @@
  ******************************************************************************/
 package com.bstek.urule.console.servlet.action;
 
-import com.bstek.urule.ClassUtils;
 import com.bstek.urule.Utils;
 import com.bstek.urule.console.servlet.RenderPageServletHandler;
 import com.bstek.urule.model.ExposeAction;
+import com.bstek.urule.model.ExposeActionClass;
 import com.bstek.urule.model.library.action.Method;
 import com.bstek.urule.model.library.action.Parameter;
-import com.bstek.urule.model.library.action.annotation.ActionBean;
-import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.springframework.aop.framework.AdvisedSupport;
@@ -60,26 +58,20 @@ public class ActionServletHandler extends RenderPageServletHandler {
 
     public void loadActionBeans(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ApplicationContext context = Utils.getApplicationContext();
-        Map<String, Object> beanMap = context.getBeansWithAnnotation(ActionBean.class);
+        Map<String, Object> beanMap = context.getBeansWithAnnotation(ExposeActionClass.class);
         List<Map<String, Object>> list = new ArrayList<>();
         Set<String> keySet = beanMap.keySet();
-        String customActionPackagePrefix = (String) Utils.getApplicationContext().getBean("customActionPackagePrefix");
-        String[] prefixes = customActionPackagePrefix.split(",");
         for (String key : keySet) {
             Object object = beanMap.get(key);
             Class<?> clazz = object.getClass();
-            String packageName = clazz.getPackage().getName();
-            if (!StringUtils.startsWithAny(packageName, prefixes)) {
-                continue;
-            }
 
-            ActionBean actionBean = clazz.getAnnotation(ActionBean.class);
+            ExposeActionClass actionBean = clazz.getAnnotation(ExposeActionClass.class);
             Map<String, Object> map = new HashMap<>(16);
             map.put("id", key);
-            map.put("name", actionBean.name());
+            map.put("name", actionBean.value());
             map.put("type", "Custom");
 
-            List<Method> methods = ClassUtils.classToMethods(object.getClass());
+            List<Method> methods = parseClassMethods(object.getClass());
 
             map.put("methods", methods);
             list.add(map);
@@ -91,8 +83,13 @@ public class ActionServletHandler extends RenderPageServletHandler {
         String beanId = req.getParameter("beanId");
         Object o = applicationContext.getBean(beanId);
         Object bean = getTarget(o);
-        List<Method> list = new ArrayList<Method>();
-        java.lang.reflect.Method[] methods = bean.getClass().getMethods();
+        List<Method> list = parseClassMethods(bean.getClass());
+        writeObjectToJson(resp, list);
+    }
+
+    private List<Method> parseClassMethods(Class<?> cls) {
+        List<Method> list = new ArrayList<>();
+        java.lang.reflect.Method[] methods = cls.getMethods();
         for (java.lang.reflect.Method m : methods) {
             ExposeAction action = m.getAnnotation(ExposeAction.class);
             if (action == null) {
@@ -105,7 +102,7 @@ public class ActionServletHandler extends RenderPageServletHandler {
             method.setParameters(buildParameters(m));
             list.add(method);
         }
-        writeObjectToJson(resp, list);
+        return list;
     }
 
     private Object getTarget(Object proxy) {

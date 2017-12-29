@@ -19,7 +19,7 @@ class ConstantEditor extends React.Component{
         const slaveHeaders=[
             {id:'slave-name',name:'value',label:'值',filterable:true,editable:true,width:'160px'},
             {id:'slave-label',name:'label',label:'名称',filterable:true,editable:true},
-            {id:'slave-type',name:'type',label:'数据类型',width:'160px',editable:true,editorType:'select',selectData:['String','Integer','Char','Double','Long','Float','BigDecimal','Boolean','Date','List','Set','Map','Enum','Object']},
+            {id:'slave-type',name:'type',label:'数据类型',width:'160px',editable:true,editorType:'select',selectData:['String','Integer','Char','Double','Long','Float','BigDecimal','Boolean','Date','List','Set','Map','Enum','LocalDate','LocalDateTime','YearMonth','Object']},
         ];
         const masterGridOperationCol={
             width:'100px',

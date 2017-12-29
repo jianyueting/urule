@@ -24,7 +24,7 @@ class VariableEditor extends Component{
         const slaveGridHeaders=[
             {id:'slave-name',name:'name',label:'字段名',filterable:true,editable:true},
             {id:'slave-label',name:'label',label:'标题',filterable:true,width:'220px',editable:true},
-            {id:'slave-type',name:'type',label:'数据类型',width:'95px',editorType:'select',selectData:['String','Integer','Char','Double','Long','Float','BigDecimal','Boolean','Date','List','Set','Map','Enum','Object'],editable:true}
+            {id:'slave-type',name:'type',label:'数据类型',width:'95px',editorType:'select',selectData:['String','Integer','Char','Double','Long','Float','BigDecimal','Boolean','Date','List','Set','Map','Enum','LocalDate','LocalDateTime','YearMonth','Object'],editable:true}
         ];
 
         const masterGridOperationCol={

@@ -23,7 +23,7 @@ class ActionEditor extends Component{
         ];
         const parametersHeaders=[
             {id:'p-name',name:'name',label:'参数名称',filterable:true,width:'160px',editable:true},
-            {id:'p-type',name:'type',label:'数据类型',editorType:'select',selectData:['String','Integer','Char','Double','Long','Float','BigDecimal','Boolean','Date','List','Set','Map','Enum','Object'],editable:true}
+            {id:'p-type',name:'type',label:'数据类型',editorType:'select',selectData:['String','Integer','Char','Double','Long','Float','BigDecimal','Boolean','Date','List','Set','Map','Enum','LocalDate','LocalDateTime','YearMonth','Object'],editable:true}
         ];
         const {masterData,masterRowData,slaveRowData,file,dispatch}=this.props;
         const masterGridOperationCol={

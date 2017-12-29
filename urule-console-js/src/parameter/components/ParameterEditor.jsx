@@ -14,7 +14,7 @@ class ParameterEditor extends Component{
         const headers=[
             {id:'p-name',name:'name',label:'名称',filterable:true,editable:true,width:'260px'},
             {id:'p-label',name:'label',label:'标题',filterable:true,editable:true,width:'260px'},
-            {id:'p-type',name:'type',label:'数据类型',editable:true,editorType:'select',selectData:['String','Integer','Char','Double','Long','Float','BigDecimal','Boolean','Date','List','Set','Map','Enum','Object']}
+            {id:'p-type',name:'type',label:'数据类型',editable:true,editorType:'select',selectData:['String','Integer','Char','Double','Long','Float','BigDecimal','Boolean','Date','List','Set','Map','Enum','LocalDate','LocalDateTime','YearMonth','Object']}
         ];
         const operationConfig={
             width:'100px',

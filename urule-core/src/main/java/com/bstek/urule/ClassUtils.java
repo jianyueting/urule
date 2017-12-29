@@ -97,45 +97,6 @@ public class ClassUtils {
         }
     }
 
-    public static List<Method> classToMethods(Class<?> cls) {
-        try {
-            List<Method> list = new ArrayList<>();
-            java.lang.reflect.Method[] methods = cls.getDeclaredMethods();
-
-            for (java.lang.reflect.Method method : methods) {
-                Class<?>[] parameterTypes = method.getParameterTypes();
-                ActionMethod actionMethod = method.getAnnotation(ActionMethod.class);
-                ActionMethodParameter actionMethodParameter = method.getAnnotation(ActionMethodParameter.class);
-                if (actionMethod != null && actionMethodParameter != null) {
-                    Method method1 = new Method();
-                    method1.setName(actionMethod.name());
-                    method1.setMethodName(method.getName());
-
-                    String[] names = actionMethodParameter.names();
-
-                    if (names.length != parameterTypes.length) {
-                        throw new RuntimeException("ActionMethodParameter注解参数个数不匹配");
-                    }
-
-                    for (int i = 0; i < names.length; i++) {
-                        String name = names[i];
-                        Class<?> type = parameterTypes[i];
-                        Parameter parameter = new Parameter();
-                        parameter.setName(name);
-                        parameter.setType(getDatatypeFromClass(type));
-                        method1.addParameter(parameter);
-                    }
-
-                    list.add(method1);
-                }
-            }
-
-            return list;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static List<Constant> classToConstant(Class<?> cls) {
         try {
             Object instance = cls.newInstance();
