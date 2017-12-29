@@ -21,7 +21,7 @@ import com.bstek.urule.console.EnvironmentUtils;
 import com.bstek.urule.console.User;
 import com.bstek.urule.console.repository.RepositoryService;
 import com.bstek.urule.console.repository.RepositoryServiceImpl;
-import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.console.servlet.BaseServletHandler;
 import com.bstek.urule.console.servlet.RequestContext;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -36,24 +36,19 @@ import java.io.PrintWriter;
  * @author Jacky.gao
  * @since 2016年8月11日
  */
-public class ClientConfigServletHandler extends RenderPageServletHandler {
+public class ClientConfigServletHandler extends BaseServletHandler {
     private RepositoryService repositoryService;
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String method = retrieveMethod(req);
-        if (method != null) {
-            invokeMethod(method, req, resp);
-        } else {
-            VelocityContext context = new VelocityContext();
-            context.put("contextPath", req.getContextPath());
-            resp.setContentType("text/html");
-            resp.setCharacterEncoding("utf-8");
-            Template template = ve.getTemplate("html/client-config-editor.html", "utf-8");
-            PrintWriter writer = resp.getWriter();
-            template.merge(context, writer);
-            writer.close();
-        }
+    protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        VelocityContext context = new VelocityContext();
+        context.put("contextPath", req.getContextPath());
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("utf-8");
+        Template template = ve.getTemplate("html/client-config-editor.html", "utf-8");
+        PrintWriter writer = resp.getWriter();
+        template.merge(context, writer);
+        writer.close();
     }
 
     public void loadData(HttpServletRequest req, HttpServletResponse resp) throws Exception {

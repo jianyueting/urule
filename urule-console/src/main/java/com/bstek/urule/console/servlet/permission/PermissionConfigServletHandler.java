@@ -24,7 +24,7 @@ import com.bstek.urule.console.repository.RepositoryServiceImpl;
 import com.bstek.urule.console.repository.model.RepositoryFile;
 import com.bstek.urule.console.repository.permission.PermissionService;
 import com.bstek.urule.console.repository.permission.PermissionStore;
-import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.console.servlet.BaseServletHandler;
 import com.bstek.urule.console.servlet.RequestContext;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -41,28 +41,24 @@ import java.util.List;
  * @author Jacky.gao
  * @since 2016年8月30日
  */
-public class PermissionConfigServletHandler extends RenderPageServletHandler {
+public class PermissionConfigServletHandler extends BaseServletHandler {
     private RepositoryService repositoryService;
     private PermissionStore permissionStore;
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!((PermissionService) permissionStore).isAdmin()) {
             throw new NoPermissionException();
         }
-        String method = retrieveMethod(req);
-        if (method != null) {
-            invokeMethod(method, req, resp);
-        } else {
-            VelocityContext context = new VelocityContext();
-            context.put("contextPath", req.getContextPath());
-            resp.setContentType("text/html");
-            resp.setCharacterEncoding("utf-8");
-            Template template = ve.getTemplate("html/permission-config-editor.html", "utf-8");
-            PrintWriter writer = resp.getWriter();
-            template.merge(context, writer);
-            writer.close();
-        }
+
+        VelocityContext context = new VelocityContext();
+        context.put("contextPath", req.getContextPath());
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("utf-8");
+        Template template = ve.getTemplate("html/permission-config-editor.html", "utf-8");
+        PrintWriter writer = resp.getWriter();
+        template.merge(context, writer);
+        writer.close();
     }
 
     public void loadResourceSecurityConfigs(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

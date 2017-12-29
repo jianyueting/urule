@@ -23,7 +23,7 @@ import com.bstek.urule.console.repository.Repository;
 import com.bstek.urule.console.repository.RepositoryResourceProvider;
 import com.bstek.urule.console.repository.RepositoryService;
 import com.bstek.urule.console.repository.model.FileType;
-import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.console.servlet.BaseServletHandler;
 import com.bstek.urule.console.servlet.RequestContext;
 import com.bstek.urule.dsl.RuleParserLexer;
 import com.bstek.urule.dsl.RuleParserParser;
@@ -55,20 +55,15 @@ import java.util.List;
  * @author Jacky.gao
  * @since 2016年7月25日
  */
-public class CommonServletHandler extends RenderPageServletHandler {
+public class CommonServletHandler extends BaseServletHandler {
     private RepositoryService repositoryService;
     private BuiltInActionLibraryBuilder builtInActionLibraryBuilder;
     private List<Deserializer<?>> deserializers = new ArrayList<Deserializer<?>>();
     private List<FunctionDescriptor> functionDescriptors = new ArrayList<FunctionDescriptor>();
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String method = retrieveMethod(req);
-        if (method != null) {
-            invokeMethod(method, req, resp);
-        } else {
-            throw new ServletException("Unsupport this operation.");
-        }
+    protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        throw new ServletException("Unsupport this operation.");
     }
 
     public void saveFile(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

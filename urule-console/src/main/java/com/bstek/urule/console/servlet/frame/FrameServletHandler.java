@@ -25,7 +25,7 @@ import com.bstek.urule.console.repository.model.FileType;
 import com.bstek.urule.console.repository.model.RepositoryFile;
 import com.bstek.urule.console.repository.model.Type;
 import com.bstek.urule.console.repository.model.VersionFile;
-import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.console.servlet.BaseServletHandler;
 import com.bstek.urule.console.servlet.RequestContext;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -55,29 +55,24 @@ import java.util.Map;
  * @author Jacky.gao
  * @since 2016年6月3日
  */
-public class FrameServletHandler extends RenderPageServletHandler {
+public class FrameServletHandler extends BaseServletHandler {
     private RepositoryService repositoryService;
     private String welcomePage;
     private String title;
     private static final String CLASSIFY_COOKIE_NAME = "_lib_classify";
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String method = retrieveMethod(req);
-        if (method != null) {
-            invokeMethod(method, req, resp);
-        } else {
-            VelocityContext context = new VelocityContext();
-            context.put("contextPath", req.getContextPath());
-            context.put("welcomePage", welcomePage);
-            context.put("title", title);
-            resp.setContentType("text/html");
-            resp.setCharacterEncoding("utf-8");
-            Template template = ve.getTemplate("html/frame.html", "utf-8");
-            PrintWriter writer = resp.getWriter();
-            template.merge(context, writer);
-            writer.close();
-        }
+    protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        VelocityContext context = new VelocityContext();
+        context.put("contextPath", req.getContextPath());
+        context.put("welcomePage", welcomePage);
+        context.put("title", title);
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("utf-8");
+        Template template = ve.getTemplate("html/frame.html", "utf-8");
+        PrintWriter writer = resp.getWriter();
+        template.merge(context, writer);
+        writer.close();
     }
 
     public void fileVersions(HttpServletRequest req, HttpServletResponse resp) throws Exception {

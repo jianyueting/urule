@@ -12,4 +12,5 @@ import java.lang.annotation.Target;
 @Component
 public @interface ExposeActionClass {
     String value();
+    String name();
 }

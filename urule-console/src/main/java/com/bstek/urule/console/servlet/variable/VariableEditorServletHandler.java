@@ -17,7 +17,7 @@ package com.bstek.urule.console.servlet.variable;
 
 import com.bstek.urule.ClassUtils;
 import com.bstek.urule.Utils;
-import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.console.servlet.BaseServletHandler;
 import com.bstek.urule.model.VariableClass;
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.library.variable.Act;
@@ -43,27 +43,24 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.*;
 
+import static com.bstek.urule.console.helper.SpringObjectHelper.getTargetObject;
+
 /**
  * @author Jacky.gao
  * @since 2016年6月3日
  */
-public class VariableEditorServletHandler extends RenderPageServletHandler {
+public class VariableEditorServletHandler extends BaseServletHandler {
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String method = retrieveMethod(req);
-        if (method != null) {
-            invokeMethod(method, req, resp);
-        } else {
-            VelocityContext context = new VelocityContext();
-            context.put("contextPath", req.getContextPath());
-            resp.setContentType("text/html");
-            resp.setCharacterEncoding("utf-8");
-            Template template = ve.getTemplate("html/variable-editor.html", "utf-8");
-            PrintWriter writer = resp.getWriter();
-            template.merge(context, writer);
-            writer.close();
-        }
+    protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        VelocityContext context = new VelocityContext();
+        context.put("contextPath", req.getContextPath());
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("utf-8");
+        Template template = ve.getTemplate("html/variable-editor.html", "utf-8");
+        PrintWriter writer = resp.getWriter();
+        template.merge(context, writer);
+        writer.close();
     }
 
     public void loadVariableClasses(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -72,7 +69,9 @@ public class VariableEditorServletHandler extends RenderPageServletHandler {
         List<Map<String, Object>> list = new ArrayList<>();
         Set<String> keySet = beanMap.keySet();
         for (String key : keySet) {
-            Object object = beanMap.get(key);
+            Object proxy = beanMap.get(key);
+            Object object = getTargetObject(proxy);
+
             VariableClass variableClass = object.getClass().getAnnotation(VariableClass.class);
             Map<String, Object> map = new HashMap<>(16);
             map.put("clazz", object.getClass().getName());

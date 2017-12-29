@@ -51,7 +51,7 @@ public class ExecuteMethodAction extends AbstractAction {
             java.lang.reflect.Method method = null;
             if (parameters != null && parameters.size() > 0) {
                 ParametersWrap wrap = buildParameterClasses(context, matchedObject, allMatchedObjects, variableMap);
-                Method[] methods = obj.getClass().getMethods();
+                Method[] methods = obj.getClass().getDeclaredMethods();
                 Datatype[] targetDatatypes = wrap.getDatatypes();
                 boolean match = false;
                 for (Method m : methods) {

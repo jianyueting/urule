@@ -28,7 +28,7 @@ import com.bstek.urule.console.repository.ClientConfig;
 import com.bstek.urule.console.repository.RepositoryService;
 import com.bstek.urule.console.repository.RepositoryServiceImpl;
 import com.bstek.urule.console.repository.model.ResourcePackage;
-import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.console.servlet.BaseServletHandler;
 import com.bstek.urule.console.servlet.RequestContext;
 import com.bstek.urule.model.GeneralEntity;
 import com.bstek.urule.model.flow.FlowDefinition;
@@ -77,7 +77,7 @@ import java.util.List;
  * @author Jacky.gao
  * @since 2016年6月3日
  */
-public class PackageServletHandler extends RenderPageServletHandler {
+public class PackageServletHandler extends BaseServletHandler {
     public static final String KB_KEY = "_kb";
     public static final String VCS_KEY = "_vcs";
     public static final String IMPORT_EXCEL_DATA = "_import_excel_data";
@@ -86,20 +86,15 @@ public class PackageServletHandler extends RenderPageServletHandler {
     private HttpSessionKnowledgeCache httpSessionKnowledgeCache;
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String method = retrieveMethod(req);
-        if (method != null) {
-            invokeMethod(method, req, resp);
-        } else {
-            VelocityContext context = new VelocityContext();
-            context.put("contextPath", req.getContextPath());
-            resp.setContentType("text/html");
-            resp.setCharacterEncoding("utf-8");
-            Template template = ve.getTemplate("html/package-editor.html", "utf-8");
-            PrintWriter writer = resp.getWriter();
-            template.merge(context, writer);
-            writer.close();
-        }
+    protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        VelocityContext context = new VelocityContext();
+        context.put("contextPath", req.getContextPath());
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("utf-8");
+        Template template = ve.getTemplate("html/package-editor.html", "utf-8");
+        PrintWriter writer = resp.getWriter();
+        template.merge(context, writer);
+        writer.close();
     }
 
     public void loadPackages(HttpServletRequest req, HttpServletResponse resp) throws Exception {

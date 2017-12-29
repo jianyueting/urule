@@ -19,8 +19,7 @@ import com.bstek.urule.RuleException;
 import com.bstek.urule.Utils;
 import com.bstek.urule.console.repository.RepositoryResourceProvider;
 import com.bstek.urule.console.repository.RepositoryService;
-import com.bstek.urule.console.servlet.WriteJsonServletHandler;
-import com.bstek.urule.model.VariableClass;
+import com.bstek.urule.console.servlet.BaseServletHandler;
 import com.bstek.urule.model.library.action.ActionLibrary;
 import com.bstek.urule.model.library.action.SpringBean;
 import com.bstek.urule.parse.deserializer.*;
@@ -39,29 +38,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Jacky.gao
  * @since 2016年6月3日
  */
-public class XmlServletHandler extends WriteJsonServletHandler implements ApplicationContextAware {
+public class XmlServletHandler extends BaseServletHandler implements ApplicationContextAware {
     private RepositoryService repositoryService;
     private BuiltInActionLibraryBuilder builtInActionLibraryBuilder;
     protected List<Deserializer<?>> deserializers = new ArrayList<Deserializer<?>>();
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String methodName = retrieveMethod(req);
-        if (methodName != null) {
-            invokeMethod(methodName, req, resp);
-        } else {
-            //default load xml
-            loadXml(req, resp);
-        }
-    }
-
-    public void loadXml(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Object> result = new ArrayList<Object>();
         String files = req.getParameter("files");
         boolean isaction = false;

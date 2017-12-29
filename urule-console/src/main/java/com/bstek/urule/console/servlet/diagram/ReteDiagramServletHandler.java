@@ -19,7 +19,7 @@ import com.bstek.urule.Utils;
 import com.bstek.urule.builder.KnowledgeBase;
 import com.bstek.urule.builder.KnowledgeBuilder;
 import com.bstek.urule.builder.ResourceBase;
-import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.console.servlet.BaseServletHandler;
 import com.bstek.urule.console.servlet.respackage.HttpSessionKnowledgeCache;
 import com.bstek.urule.console.servlet.respackage.PackageServletHandler;
 import com.bstek.urule.model.Node;
@@ -41,7 +41,7 @@ import java.util.Map;
  * @author Jacky.gao
  * @since 2016年6月23日
  */
-public class ReteDiagramServletHandler extends RenderPageServletHandler {
+public class ReteDiagramServletHandler extends BaseServletHandler {
     private KnowledgeBuilder knowledgeBuilder;
     private ReteNodeLayout nodeLayout;
     private final int nodeWidth = 30;
@@ -53,21 +53,16 @@ public class ReteDiagramServletHandler extends RenderPageServletHandler {
     }
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String method = retrieveMethod(req);
-        if (method != null) {
-            invokeMethod(method, req, resp);
-        } else {
-            VelocityContext context = new VelocityContext();
-            context.put("contextPath", req.getContextPath());
-            context.put("files", req.getParameter("files"));
-            resp.setContentType("text/html");
-            resp.setCharacterEncoding("utf-8");
-            Template template = ve.getTemplate("html/rete-diagram.html", "utf-8");
-            PrintWriter writer = resp.getWriter();
-            template.merge(context, writer);
-            writer.close();
-        }
+    protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        VelocityContext context = new VelocityContext();
+        context.put("contextPath", req.getContextPath());
+        context.put("files", req.getParameter("files"));
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("utf-8");
+        Template template = ve.getTemplate("html/rete-diagram.html", "utf-8");
+        PrintWriter writer = resp.getWriter();
+        template.merge(context, writer);
+        writer.close();
     }
 
     public void loadReteDiagramData(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

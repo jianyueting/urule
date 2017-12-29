@@ -19,7 +19,7 @@ import com.bstek.urule.RuleException;
 import com.bstek.urule.Utils;
 import com.bstek.urule.builder.ResourceLibraryBuilder;
 import com.bstek.urule.console.repository.RepositoryService;
-import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.console.servlet.BaseServletHandler;
 import com.bstek.urule.dsl.DSLRuleSetBuilder;
 import com.bstek.urule.model.library.ResourceLibrary;
 import com.bstek.urule.model.rule.RuleSet;
@@ -40,31 +40,26 @@ import java.io.PrintWriter;
  * @author Jacky.gao
  * @since 2016年8月1日
  */
-public class ULEditorServletHandler extends RenderPageServletHandler {
+public class ULEditorServletHandler extends BaseServletHandler {
     private DSLRuleSetBuilder dslRuleSetBuilder;
     private ResourceLibraryBuilder resourceLibraryBuilder;
     private RepositoryService repositoryService;
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String method = retrieveMethod(req);
-        if (method != null) {
-            invokeMethod(method, req, resp);
-        } else {
-            VelocityContext context = new VelocityContext();
-            context.put("contextPath", req.getContextPath());
-            String file = req.getParameter("file");
-            String project = buildProjectNameFromFile(file);
-            if (project != null) {
-                context.put("project", project);
-            }
-            resp.setContentType("text/html");
-            resp.setCharacterEncoding("utf-8");
-            Template template = ve.getTemplate("html/ul-editor.html", "utf-8");
-            PrintWriter writer = resp.getWriter();
-            template.merge(context, writer);
-            writer.close();
+    protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        VelocityContext context = new VelocityContext();
+        context.put("contextPath", req.getContextPath());
+        String file = req.getParameter("file");
+        String project = buildProjectNameFromFile(file);
+        if (project != null) {
+            context.put("project", project);
         }
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("utf-8");
+        Template template = ve.getTemplate("html/ul-editor.html", "utf-8");
+        PrintWriter writer = resp.getWriter();
+        template.merge(context, writer);
+        writer.close();
     }
 
     public void loadUL(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

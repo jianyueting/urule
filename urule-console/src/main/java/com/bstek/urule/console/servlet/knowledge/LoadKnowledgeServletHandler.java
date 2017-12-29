@@ -16,7 +16,7 @@
 package com.bstek.urule.console.servlet.knowledge;
 
 import com.bstek.urule.Utils;
-import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.console.servlet.BaseServletHandler;
 import com.bstek.urule.runtime.KnowledgePackage;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;
 import com.bstek.urule.runtime.cache.CacheUtils;
@@ -33,11 +33,11 @@ import java.io.PrintWriter;
  * @author Jacky.gao
  * @since 2016年8月17日
  */
-public class LoadKnowledgeServletHandler extends RenderPageServletHandler {
+public class LoadKnowledgeServletHandler extends BaseServletHandler {
     private KnowledgePackageService knowledgePackageService;
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String packageId = req.getParameter("packageId");
         if (StringUtils.isEmpty(packageId)) {
             resp.setContentType("text/html");

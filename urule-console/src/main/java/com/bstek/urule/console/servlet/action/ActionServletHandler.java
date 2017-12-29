@@ -16,16 +16,13 @@
 package com.bstek.urule.console.servlet.action;
 
 import com.bstek.urule.Utils;
-import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.console.servlet.BaseServletHandler;
 import com.bstek.urule.model.ExposeAction;
 import com.bstek.urule.model.ExposeActionClass;
 import com.bstek.urule.model.library.action.Method;
 import com.bstek.urule.model.library.action.Parameter;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.springframework.aop.framework.AdvisedSupport;
-import org.springframework.aop.framework.AopProxy;
-import org.springframework.aop.support.AopUtils;
 import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletException;
@@ -33,27 +30,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
 import java.util.*;
 
 import static com.bstek.urule.Utils.getDatatypeFromClass;
+import static com.bstek.urule.console.helper.SpringObjectHelper.getTargetObject;
 
-public class ActionServletHandler extends RenderPageServletHandler {
+public class ActionServletHandler extends BaseServletHandler {
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String method = retrieveMethod(req);
-        if (method != null) {
-            invokeMethod(method, req, resp);
-        } else {
-            VelocityContext context = new VelocityContext();
-            context.put("contextPath", req.getContextPath());
-            resp.setContentType("text/html");
-            resp.setCharacterEncoding("utf-8");
-            Template template = ve.getTemplate("html/action-editor.html", "utf-8");
-            PrintWriter writer = resp.getWriter();
-            template.merge(context, writer);
-            writer.close();
-        }
+    protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        VelocityContext context = new VelocityContext();
+        context.put("contextPath", req.getContextPath());
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("utf-8");
+        Template template = ve.getTemplate("html/action-editor.html", "utf-8");
+        PrintWriter writer = resp.getWriter();
+        template.merge(context, writer);
+        writer.close();
     }
 
     public void loadActionBeans(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -62,13 +54,14 @@ public class ActionServletHandler extends RenderPageServletHandler {
         List<Map<String, Object>> list = new ArrayList<>();
         Set<String> keySet = beanMap.keySet();
         for (String key : keySet) {
-            Object object = beanMap.get(key);
+            Object proxy = beanMap.get(key);
+            Object object = getTargetObject(proxy);
             Class<?> clazz = object.getClass();
 
             ExposeActionClass actionBean = clazz.getAnnotation(ExposeActionClass.class);
             Map<String, Object> map = new HashMap<>(16);
-            map.put("id", key);
-            map.put("name", actionBean.value());
+            map.put("id", actionBean.value());
+            map.put("name", actionBean.name());
             map.put("type", "Custom");
 
             List<Method> methods = parseClassMethods(object.getClass());
@@ -82,14 +75,14 @@ public class ActionServletHandler extends RenderPageServletHandler {
     public void loadMethods(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String beanId = req.getParameter("beanId");
         Object o = applicationContext.getBean(beanId);
-        Object bean = getTarget(o);
+        Object bean = getTargetObject(o);
         List<Method> list = parseClassMethods(bean.getClass());
         writeObjectToJson(resp, list);
     }
 
     private List<Method> parseClassMethods(Class<?> cls) {
         List<Method> list = new ArrayList<>();
-        java.lang.reflect.Method[] methods = cls.getMethods();
+        java.lang.reflect.Method[] methods = cls.getDeclaredMethods();
         for (java.lang.reflect.Method m : methods) {
             ExposeAction action = m.getAnnotation(ExposeAction.class);
             if (action == null) {
@@ -105,46 +98,8 @@ public class ActionServletHandler extends RenderPageServletHandler {
         return list;
     }
 
-    private Object getTarget(Object proxy) {
-        if (!AopUtils.isAopProxy(proxy)) {
-            return proxy;//不是代理对象
-        }
-        try {
-            if (AopUtils.isJdkDynamicProxy(proxy)) {
-                return getJdkDynamicProxyTargetObject(proxy);
-            } else { //cglib
-                return getCglibProxyTargetObject(proxy);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Object getCglibProxyTargetObject(Object proxy) throws Exception {
-        Field h = proxy.getClass().getDeclaredField("CGLIB$CALLBACK_0");
-        h.setAccessible(true);
-        Object dynamicAdvisedInterceptor = h.get(proxy);
-        Field advised = dynamicAdvisedInterceptor.getClass().getDeclaredField("advised");
-        advised.setAccessible(true);
-
-        Object target = ((AdvisedSupport) advised.get(dynamicAdvisedInterceptor)).getTargetSource().getTarget();
-
-        return target;
-    }
-
-
-    private Object getJdkDynamicProxyTargetObject(Object proxy) throws Exception {
-        Field h = proxy.getClass().getSuperclass().getDeclaredField("h");
-        h.setAccessible(true);
-        AopProxy aopProxy = (AopProxy) h.get(proxy);
-        Field advised = aopProxy.getClass().getDeclaredField("advised");
-        advised.setAccessible(true);
-        Object target = ((AdvisedSupport) advised.get(aopProxy)).getTargetSource().getTarget();
-        return target;
-    }
-
     private List<Parameter> buildParameters(java.lang.reflect.Method m) {
-        List<Parameter> parameters = new ArrayList<Parameter>();
+        List<Parameter> parameters = new ArrayList<>();
         Class<?>[] classes = m.getParameterTypes();
         for (int i = 0; i < classes.length; i++) {
             Class<?> c = classes[i];

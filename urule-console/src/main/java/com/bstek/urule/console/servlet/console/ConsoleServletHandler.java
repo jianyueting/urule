@@ -15,7 +15,7 @@
  ******************************************************************************/
 package com.bstek.urule.console.servlet.console;
 
-import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.console.servlet.BaseServletHandler;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -30,11 +30,11 @@ import java.io.PrintWriter;
  * @author Jacky.gao
  * @since 2017年11月28日
  */
-public class ConsoleServletHandler extends RenderPageServletHandler {
+public class ConsoleServletHandler extends BaseServletHandler {
     private DebugMessageHolder debugMessageHolder;
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String key = req.getParameter("key");
         String msg = null;
         if (StringUtils.isBlank(key)) {
