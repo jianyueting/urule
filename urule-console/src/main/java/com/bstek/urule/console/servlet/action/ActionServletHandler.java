@@ -19,6 +19,7 @@ import com.bstek.urule.Utils;
 import com.bstek.urule.console.servlet.BaseServletHandler;
 import com.bstek.urule.model.ExposeAction;
 import com.bstek.urule.model.ExposeActionClass;
+import com.bstek.urule.model.ExposeActionParameter;
 import com.bstek.urule.model.library.action.Method;
 import com.bstek.urule.model.library.action.Parameter;
 import org.apache.velocity.Template;
@@ -101,12 +102,29 @@ public class ActionServletHandler extends BaseServletHandler {
     private List<Parameter> buildParameters(java.lang.reflect.Method m) {
         List<Parameter> parameters = new ArrayList<>();
         Class<?>[] classes = m.getParameterTypes();
-        for (int i = 0; i < classes.length; i++) {
-            Class<?> c = classes[i];
-            Parameter p = new Parameter();
-            p.setName("参数" + i);
-            p.setType(getDatatypeFromClass(c));
-            parameters.add(p);
+
+        ExposeActionParameter parameter = m.getAnnotation(ExposeActionParameter.class);
+        if (parameter == null) {
+            for (int i = 0; i < classes.length; i++) {
+                Class<?> c = classes[i];
+                Parameter p = new Parameter();
+                p.setName("参数" + i);
+                p.setType(getDatatypeFromClass(c));
+                parameters.add(p);
+            }
+        } else {
+            String[] names = parameter.names();
+            if (names.length != classes.length) {
+                throw new RuntimeException("ExposeActionParameter参数个数不匹配");
+            }
+            for (int i = 0; i < names.length; i++) {
+                Class<?> clazz = classes[i];
+                String name = names[i];
+                Parameter p = new Parameter();
+                p.setName(name);
+                p.setType(getDatatypeFromClass(clazz));
+                parameters.add(p);
+            }
         }
         return parameters;
     }
