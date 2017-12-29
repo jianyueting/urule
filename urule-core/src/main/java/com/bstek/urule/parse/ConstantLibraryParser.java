@@ -66,7 +66,7 @@ public class ConstantLibraryParser implements Parser<ConstantLibrary> {
 
     private Constant parseConstant(Element element) {
         Constant constant = new Constant();
-        constant.setName(element.attributeValue("name"));
+        constant.setValue(element.attributeValue("value"));
         constant.setLabel(element.attributeValue("label"));
         constant.setType(Datatype.valueOf(element.attributeValue("type")));
         return constant;

@@ -13,12 +13,12 @@ class ConstantEditor extends React.Component{
     render(){
         const {dispatch,masterData,masterRowData,file}=this.props;
         const masterHeaders=[
-            {id:'master-name',name:'name',label:'名称',filterable:true,editable:true,width:'200px'},
+            {id:'master-name',name:'name',label:'变量名',filterable:true,editable:true,width:'200px'},
             {id:'master-label',name:'label',label:'标题',filterable:true,editable:true}
         ];
         const slaveHeaders=[
-            {id:'slave-name',name:'name',label:'名称',filterable:true,editable:true,width:'160px'},
-            {id:'slave-label',name:'label',label:'标题',filterable:true,editable:true},
+            {id:'slave-name',name:'value',label:'值',filterable:true,editable:true,width:'160px'},
+            {id:'slave-label',name:'label',label:'名称',filterable:true,editable:true},
             {id:'slave-type',name:'type',label:'数据类型',width:'160px',editable:true,editorType:'select',selectData:['String','Integer','Char','Double','Long','Float','BigDecimal','Boolean','Date','List','Set','Map','Enum','Object']},
         ];
         const masterGridOperationCol={
@@ -61,6 +61,23 @@ class ConstantEditor extends React.Component{
                     <div>
                         <div style={{margin:'2px'}}>
                             <div className="btn-group btn-group-sm" style={{margin:'2px'}}>
+                                <button className="btn btn-primary" type="button" onClick={(e)=>{
+                                    var url = window._server + "/constanteditor/loadConstantClasses";
+                                    $.ajax({
+                                        url,
+                                        type:'POST',
+                                        success:function (rows) {
+                                            dispatch(action.addMasterRows(rows));
+                                        },
+                                        error:function (response) {
+                                            if(response && response.responseText){
+                                                bootbox.alert("<span style='color: red'>加载数据失败,服务端错误："+response.responseText+"</span>");
+                                            }else{
+                                                bootbox.alert("<span style='color: red'>加载数据失败,服务端出错</span>");
+                                            }
+                                        }
+                                    });
+                                }}><i className="glyphicon glyphicon-refresh"></i> 扫描</button>
                                 <button className="btn btn-primary" type="button" onClick={(e)=>{dispatch(action.addMaster())}}><i className="glyphicon glyphicon-plus-sign"></i> 添加分类</button>
                             </div>
                             <div className="btn-group btn-group-sm" style={{margin:'2px'}}>

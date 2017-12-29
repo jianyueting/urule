@@ -22,16 +22,16 @@ import com.bstek.urule.model.library.Datatype;
  * @since 2014年12月23日
  */
 public class Constant {
-    private String name;
+    private String value;
     private String label;
     private Datatype type;
 
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public String getLabel() {

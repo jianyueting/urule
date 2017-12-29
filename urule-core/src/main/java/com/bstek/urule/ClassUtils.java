@@ -15,8 +15,10 @@
  ******************************************************************************/
 package com.bstek.urule;
 
+import com.bstek.urule.model.Const;
 import com.bstek.urule.model.Label;
 import com.bstek.urule.model.library.Datatype;
+import com.bstek.urule.model.library.constant.Constant;
 import com.bstek.urule.model.library.variable.Act;
 import com.bstek.urule.model.library.variable.Variable;
 import org.apache.commons.io.IOUtils;
@@ -88,6 +90,32 @@ public class ClassUtils {
             throw new RuntimeException(ex);
         } finally {
             IOUtils.closeQuietly(out);
+        }
+    }
+
+    public static List<Constant> classToConstant(Class<?> cls) {
+        try {
+            Object instance = cls.newInstance();
+
+            List<Constant> list = new ArrayList<>();
+            Field[] fields = cls.getDeclaredFields();
+
+            for (Field field : fields) {
+                Const c = field.getAnnotation(Const.class);
+                if (c != null) {
+                    Constant constant = new Constant();
+                    Datatype datatype = getDatatypeFromClass(field.getType());
+                    Object value = field.get(instance);
+                    constant.setValue(datatype.convertObjectToString(value));
+                    constant.setLabel(c.value());
+                    constant.setType(datatype);
+                    list.add(constant);
+                }
+            }
+
+            return list;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

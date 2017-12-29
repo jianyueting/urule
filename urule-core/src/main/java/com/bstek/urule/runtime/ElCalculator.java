@@ -173,8 +173,12 @@ public class ElCalculator {
     }
 
     public boolean compare(char cur, char peek) {// 如果是peek优先级高于cur，返回true，默认都是peek优先级要低
-        if (cur == '%') cur = '*';
-        if (peek == '%') peek = '*';
+        if (cur == '%') {
+            cur = '*';
+        }
+        if (peek == '%') {
+            peek = '*';
+        }
         boolean result = false;
         if (PRIORITY[(peek) - 40] >= PRIORITY[(cur) - 40]) {
             result = true;

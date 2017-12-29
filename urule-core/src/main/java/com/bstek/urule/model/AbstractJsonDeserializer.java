@@ -182,7 +182,9 @@ public abstract class AbstractJsonDeserializer<T> extends JsonDeserializer<T> {
     private List<Action> parseActions(JsonNode node) {
         List<Action> actions = new ArrayList<Action>();
         JsonNode nodes = node.get("actions");
-        if (nodes == null) return actions;
+        if (nodes == null) {
+            return actions;
+        }
         Iterator<JsonNode> iter = nodes.iterator();
         while (iter.hasNext()) {
             JsonNode jsonNode = iter.next();

@@ -329,7 +329,9 @@ public class RulesRebuilder {
                         break;
                     }
                 }
-                if (targetBean != null) break;
+                if (targetBean != null) {
+                    break;
+                }
             }
             Method targetMethod = null;
             if (targetBean != null) {
@@ -542,7 +544,7 @@ public class RulesRebuilder {
             if (forDSL) {
                 String label = cv.getConstantLabel();
                 com.bstek.urule.model.library.constant.Constant constant = getConstantByLabel(resLibraries.getConstantCategories(), category, label);
-                cv.setConstantName(constant.getName());
+                cv.setConstantName(constant.getValue());
             } else {
                 String name = cv.getConstantName();
                 com.bstek.urule.model.library.constant.Constant constant = getConstantByName(resLibraries.getConstantCategories(), category, name);
@@ -615,7 +617,9 @@ public class RulesRebuilder {
                         break;
                     }
                 }
-                if (targetBean != null) break;
+                if (targetBean != null) {
+                    break;
+                }
             }
             if (targetBean == null) {
                 throw new RuleException("Bean[" + beanLabel + "] not exist.");
@@ -648,7 +652,7 @@ public class RulesRebuilder {
                 continue;
             }
             for (com.bstek.urule.model.library.constant.Constant constant : c.getConstants()) {
-                if (constant.getName().equals(name)) {
+                if (constant.getValue().equals(name)) {
                     return constant;
                 }
             }

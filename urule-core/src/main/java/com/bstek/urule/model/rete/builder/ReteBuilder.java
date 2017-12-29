@@ -44,8 +44,12 @@ public class ReteBuilder implements ApplicationContextAware {
         Rete rete = new Rete(objectTypeNodes, resourceLibrary);
         BuildContext context = new BuildContextImpl(resourceLibrary, objectTypeNodes);
         for (Rule rule : rules) {
-            if (rule instanceof LoopRule) continue;
-            if (rule.getLhs() == null || rule.getLhs().getCriterion() == null) continue;
+            if (rule instanceof LoopRule) {
+                continue;
+            }
+            if (rule.getLhs() == null || rule.getLhs().getCriterion() == null) {
+                continue;
+            }
             buildBranch(rule, context);
         }
         return rete;

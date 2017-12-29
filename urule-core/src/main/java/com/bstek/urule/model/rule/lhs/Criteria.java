@@ -110,7 +110,9 @@ public class Criteria extends BaseCriterion implements BaseCriteria {
     public String getId() {
         if (id == null) {
             id = left.getLeftPart().getId() + "【" + op.toString() + "】";
-            if (value != null) id += value.getId();
+            if (value != null) {
+                id += value.getId();
+            }
         }
         return id;
     }

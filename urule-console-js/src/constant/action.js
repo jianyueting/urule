@@ -9,6 +9,11 @@ export const DEL_MASTER='del_master';
 export const ADD_SLAVE='add_slave';
 export const DEL_SLAVE='del_slave';
 export const SAVE='save';
+export const ADD_MASTER_ROWS="add_master_rows";
+
+export function addMasterRows(rows){
+    return {masterRowData:rows,type:ADD_MASTER_ROWS};
+}
 
 export function save(newVersion,file){
     return {newVersion,file,type:SAVE};
@@ -34,8 +39,8 @@ export function saveData(data,newVersion,file) {
             return false;
         }
         constants.forEach((constant,i)=>{
-            if(!constant.name || constant.name.length<1){
-                errorInfo='常量名不能为空.';
+            if(!constant.value || constant.value.length<1){
+                errorInfo='常量值不能为空.';
                 return false;
             }
             if(!constant.label || constant.label.length<1){
@@ -46,7 +51,7 @@ export function saveData(data,newVersion,file) {
                 errorInfo='常量数据类型不能为空.';
                 return false;
             }
-            xml+="<constant name='"+constant.name+"' label='"+constant.label+"' type='"+constant.type+"'/>";
+            xml+="<constant value='"+constant.value+"' label='"+constant.label+"' type='"+constant.type+"'/>";
         });
         if(errorInfo.length>1){
             return false;

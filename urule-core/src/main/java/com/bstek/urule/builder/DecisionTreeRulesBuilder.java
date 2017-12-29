@@ -72,7 +72,9 @@ public class DecisionTreeRulesBuilder {
     }
 
     private void buildCriterion(And and, ConditionTreeNode node) {
-        if (node == null) return;
+        if (node == null) {
+            return;
+        }
         List<ConditionTreeNode> nodes = new ArrayList<ConditionTreeNode>();
         nodes.add(node);
         VariableTreeNode varNode = null;

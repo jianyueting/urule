@@ -243,7 +243,9 @@ public class KnowledgeSessionImpl implements KnowledgeSession {
 
     private void buildWithElseRules(List<FactTracker> trackers, KnowledgePackage knowledgePackage) {
         List<Rule> withElseRules = knowledgePackage.getWithElseRules();
-        if (withElseRules == null) return;
+        if (withElseRules == null) {
+            return;
+        }
         for (Rule rule : withElseRules) {
             boolean active = false;
             for (RuleBox box : agenda.getRuleBoxes()) {
@@ -251,9 +253,13 @@ public class KnowledgeSessionImpl implements KnowledgeSession {
                     active = true;
                     break;
                 }
-                if (active) break;
+                if (active) {
+                    break;
+                }
             }
-            if (active) continue;
+            if (active) {
+                continue;
+            }
             Rule elseRule = ((KnowledgePackageImpl) knowledgePackage).getElseRule(rule);
             FactTracker tracker = new FactTracker();
             tracker.setActivation(new ActivationImpl(elseRule, null));

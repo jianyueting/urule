@@ -42,7 +42,9 @@ public abstract class CriterionParser extends AbstractParser<Criterion> implemen
             String name = ele.getName();
             for (CriterionParser parser : criterionParsers) {
                 if (parser.support(name)) {
-                    if (list == null) list = new ArrayList<Criterion>();
+                    if (list == null) {
+                        list = new ArrayList<Criterion>();
+                    }
                     Criterion criterion = parser.parse(ele);
                     if (criterion != null) {
                         list.add(criterion);

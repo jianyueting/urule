@@ -45,7 +45,9 @@ public class BuiltInActionLibraryBuilder implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         System.out.println("Load built in actions...");
         String[] names = applicationContext.getBeanDefinitionNames();
-        if (names == null || names.length == 0) return;
+        if (names == null || names.length == 0) {
+            return;
+        }
         for (String name : names) {
             Object obj = null;
             try {
@@ -72,7 +74,9 @@ public class BuiltInActionLibraryBuilder implements ApplicationContextAware {
         List<com.bstek.urule.model.library.action.Method> list = new ArrayList<com.bstek.urule.model.library.action.Method>();
         for (Method m : methods) {
             ActionMethod methodAnnotation = m.getAnnotation(ActionMethod.class);
-            if (methodAnnotation == null) continue;
+            if (methodAnnotation == null) {
+                continue;
+            }
             String name = methodAnnotation.name();
             String methodName = m.getName();
             com.bstek.urule.model.library.action.Method libMethod = new com.bstek.urule.model.library.action.Method();

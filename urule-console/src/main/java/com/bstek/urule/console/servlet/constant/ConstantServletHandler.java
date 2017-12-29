@@ -15,15 +15,21 @@
  ******************************************************************************/
 package com.bstek.urule.console.servlet.constant;
 
+import com.bstek.urule.ClassUtils;
+import com.bstek.urule.Utils;
 import com.bstek.urule.console.servlet.RenderPageServletHandler;
+import com.bstek.urule.model.ConstantClass;
+import com.bstek.urule.model.library.constant.Constant;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.*;
 
 public class ConstantServletHandler extends RenderPageServletHandler {
     @Override
@@ -41,6 +47,27 @@ public class ConstantServletHandler extends RenderPageServletHandler {
             template.merge(context, writer);
             writer.close();
         }
+    }
+
+    public void loadConstantClasses(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ApplicationContext context = Utils.getApplicationContext();
+        Map<String, Object> beanMap = context.getBeansWithAnnotation(ConstantClass.class);
+        List<Map<String, Object>> list = new ArrayList<>();
+        Set<String> keySet = beanMap.keySet();
+        for (String key : keySet) {
+            Object object = beanMap.get(key);
+            ConstantClass constantClass = object.getClass().getAnnotation(ConstantClass.class);
+            Map<String, Object> map = new HashMap<>(16);
+            map.put("name", constantClass.name());
+            map.put("label", constantClass.label());
+            map.put("type", "Custom");
+
+            List<Constant> constants = ClassUtils.classToConstant(object.getClass());
+
+            map.put("constants", constants);
+            list.add(map);
+        }
+        writeObjectToJson(response, list);
     }
 
     @Override

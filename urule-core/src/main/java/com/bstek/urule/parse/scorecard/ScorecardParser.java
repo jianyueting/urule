@@ -151,7 +151,9 @@ public class ScorecardParser implements Parser<ScorecardDefinition> {
         }
         String colCategory = card.getAttributeColVariableCategory();
         List<CardCell> cells = card.getCells();
-        if (cells == null) return;
+        if (cells == null) {
+            return;
+        }
         for (CardCell cell : cells) {
             Joint joint = cell.getJoint();
             if (joint != null && joint.getConditions() != null) {

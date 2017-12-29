@@ -21,6 +21,11 @@ function master(state={},action){
             var data=state.data;
             ACTIONS.saveData(data,action.newVersion,action.file);
             return state;
+        case ACTIONS.ADD_MASTER_ROWS:
+            var newData = [...state.data];
+            var masterRowData = action.masterRowData;
+            newData.push(...masterRowData);
+            return Object.assign({},state.prototype,{data:newData});
         default:
             return state;
     }
@@ -36,7 +41,7 @@ function slave(state={},action){
             return Object.assign({},state.prototype,{data:newData});
         case ACTIONS.ADD_SLAVE:
             var newData=Object.assign({},state.data);
-            newData.constants.push({name:'',label:'',type:'String'});
+            newData.constants.push({value:'',label:'',type:'String'});
             return Object.assign({},state.prototype,{data:newData});
         default:
             return state;

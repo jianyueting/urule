@@ -109,7 +109,9 @@ public class DecisionTreeParser implements Parser<DecisionTree> {
     }
 
     private void rebuildTreeNode(ResourceLibrary resourceLibrary, TreeNode treeNode) {
-        if (treeNode == null) return;
+        if (treeNode == null) {
+            return;
+        }
         if (treeNode instanceof VariableTreeNode) {
             VariableTreeNode varNode = (VariableTreeNode) treeNode;
             Left left = varNode.getLeft();

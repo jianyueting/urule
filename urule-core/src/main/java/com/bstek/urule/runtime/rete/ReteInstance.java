@@ -68,7 +68,9 @@ public class ReteInstance {
     }
 
     private void resetActivities(List<Path> paths, boolean forReevaluate) {
-        if (paths == null) return;
+        if (paths == null) {
+            return;
+        }
         for (Path path : paths) {
             path.setPassed(false);
             Activity activity = path.getTo();

@@ -64,10 +64,14 @@ public class KnowledgePackageImpl implements KnowledgePackage {
     }
 
     private void buildReteLinesForElseRules(List<Line> lines) {
-        if (lines == null) return;
+        if (lines == null) {
+            return;
+        }
         for (Line line : lines) {
             Node toNode = line.getTo();
-            if (toNode == null) continue;
+            if (toNode == null) {
+                continue;
+            }
             if (toNode instanceof TerminalNode) {
                 TerminalNode terminalNode = (TerminalNode) toNode;
                 Rule rule = terminalNode.getRule();
