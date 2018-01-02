@@ -208,8 +208,8 @@ public class Utils implements ApplicationContextAware {
             } else if (val == null) {
                 throw new IllegalArgumentException("Null can not to BigDecimal.");
             } else if (val instanceof String) {
-                String string = (String) val;
-                if ("".equals(string.trim())) {
+                String string = ((String) val).trim();
+                if ("".equals(string)) {
                     return BigDecimal.valueOf(0);
                 }
                 return new BigDecimal(string);
