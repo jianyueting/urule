@@ -23,7 +23,7 @@ import com.bstek.urule.model.rule.Value;
 import com.bstek.urule.model.rule.lhs.LeftType;
 import com.bstek.urule.runtime.rete.Context;
 import com.bstek.urule.runtime.rete.ValueCompute;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 
 import java.beans.PropertyDescriptor;

@@ -36,7 +36,7 @@ import com.bstek.urule.model.rule.loop.LoopEnd;
 import com.bstek.urule.model.rule.loop.LoopRule;
 import com.bstek.urule.model.rule.loop.LoopStart;
 import com.bstek.urule.model.rule.loop.LoopTarget;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 

@@ -29,7 +29,7 @@ import com.bstek.urule.model.rule.lhs.Left;
 import com.bstek.urule.model.rule.lhs.LeftPart;
 import com.bstek.urule.model.rule.lhs.VariableLeftPart;
 import com.bstek.urule.parse.Parser;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 import java.text.ParseException;

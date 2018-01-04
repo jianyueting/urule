@@ -16,102 +16,45 @@
 package com.bstek.urule.console.repository.model;
 
 import com.bstek.urule.RuleException;
-import com.bstek.urule.dsl.Constant;
 
 /**
  * @author Jacky.gao
  * @since 2014年12月24日
  */
 public enum FileType {
-    Ruleset {
-        @Override
-        public String toString() {
-            return "rs.xml";
-        }
-    }, DecisionTable {
-        @Override
-        public String toString() {
-            return "dt.xml";
-        }
-    }, ScriptDecisionTable {
-        @Override
-        public String toString() {
-            return "dts.xml";
-        }
-    }, ActionLibrary {
-        @Override
-        public String toString() {
-            return "al.xml";
-        }
-    }, VariableLibrary {
-        @Override
-        public String toString() {
-            return "vl.xml";
-        }
-    }, ParameterLibrary {
-        @Override
-        public String toString() {
-            return "pl.xml";
-        }
-    }, ConstantLibrary {
-        @Override
-        public String toString() {
-            return "cl.xml";
-        }
-    }, RuleFlow {
-        @Override
-        public String toString() {
-            return "rl.xml";
-        }
-    }, UL {
-        @Override
-        public String toString() {
-            return Constant.UL_SUFFIX;
-        }
-    }, DecisionTree {
-        @Override
-        public String toString() {
-            return "dtree.xml";
-        }
-    }, Scorecard {
-        @Override
-        public String toString() {
-            return "sc";
-        }
-    }, DIR {
-        @Override
-        public String toString() {
-            return "DIR";
-        }
-    };
+    Ruleset("rs.xml"),
+    DecisionTable("dt.xml"),
+    ScriptDecisionTable("dts.xml"),
+    ActionLibrary("al.xml"),
+    VariableLibrary("vl.xml"),
+    ParameterLibrary("pl.xml"),
+    ConstantLibrary("cl.xml"),
+    RuleFlow("rl.xml"),
+    UL(".ul"),
+    DecisionTree("dtree.xml"),
+    Scorecard("sc"),
+    DIR("DIR");
+
+    private String extType;
+
+    FileType(String extType) {
+        this.extType = extType;
+    }
+
+    @Override
+    public String toString() {
+        return this.extType;
+    }
 
     public static FileType parse(String type) {
-        if (type.equals("rs.xml")) {
-            return FileType.Ruleset;
-        } else if (type.equals("dt.xml")) {
-            return FileType.DecisionTable;
-        } else if (type.equals("dts.xml")) {
-            return FileType.ScriptDecisionTable;
-        } else if (type.equals("al.xml")) {
-            return FileType.ActionLibrary;
-        } else if (type.equals("vl.xml")) {
-            return FileType.VariableLibrary;
-        } else if (type.equals("pl.xml")) {
-            return FileType.ParameterLibrary;
-        } else if (type.equals("cl.xml")) {
-            return FileType.ConstantLibrary;
-        } else if (type.equals("rl.xml")) {
-            return FileType.RuleFlow;
-        } else if (type.equals("ul")) {
-            return FileType.UL;
-        } else if (type.equals("dtree.xml")) {
-            return FileType.DecisionTree;
-        } else if (type.equals("sc")) {
-            return FileType.Scorecard;
-        } else if (type.equals("DIR")) {
-            return FileType.DIR;
-        } else {
-            throw new RuleException("Unknow type:" + type);
+        FileType[] fileTypes = FileType.values();
+
+        for (FileType fileType : fileTypes) {
+            if (fileType.extType.equals(type)) {
+                return fileType;
+            }
         }
+
+        throw new RuleException("Unknow type:" + type);
     }
 }

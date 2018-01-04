@@ -21,7 +21,7 @@ import com.bstek.urule.model.rule.Library;
 import com.bstek.urule.model.rule.LibraryType;
 import com.bstek.urule.model.rule.RuleSet;
 import com.bstek.urule.model.table.*;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.List;

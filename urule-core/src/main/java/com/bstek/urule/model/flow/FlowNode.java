@@ -24,7 +24,7 @@ import com.bstek.urule.runtime.KnowledgeSession;
 import com.bstek.urule.runtime.event.impl.ProcessAfterNodeTriggeredEventImpl;
 import com.bstek.urule.runtime.event.impl.ProcessBeforeNodeTriggeredEventImpl;
 import com.bstek.urule.runtime.response.ExecutionResponseImpl;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;

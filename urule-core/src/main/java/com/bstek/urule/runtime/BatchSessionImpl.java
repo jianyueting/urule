@@ -16,11 +16,12 @@
 package com.bstek.urule.runtime;
 
 import com.bstek.urule.RuleException;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -28,20 +29,20 @@ import java.util.concurrent.TimeUnit;
  * @since 2015年9月29日
  */
 public class BatchSessionImpl implements BatchSession {
-    private ExecutorService executorService;
+    private ScheduledExecutorService executorService;
     private int batchSize;
     private List<Business> businessList = new ArrayList<Business>();
     private KnowledgePackage knowledgePackage;
     private KnowledgePackage[] knowledgePackages;
 
     public BatchSessionImpl(KnowledgePackage knowledgePackage, int threadSize, int batchSize) {
-        this.executorService = Executors.newFixedThreadPool(threadSize);
+        this.executorService = new ScheduledThreadPoolExecutor(threadSize, new BasicThreadFactory.Builder().namingPattern("batch-executor-%d").build());
         this.knowledgePackage = knowledgePackage;
         this.batchSize = batchSize;
     }
 
     public BatchSessionImpl(KnowledgePackage[] knowledgePackages, int threadSize, int batchSize) {
-        this.executorService = Executors.newFixedThreadPool(threadSize);
+        this.executorService = new ScheduledThreadPoolExecutor(threadSize, new BasicThreadFactory.Builder().namingPattern("batch-executor-%d").build());
         this.knowledgePackages = knowledgePackages;
         this.batchSize = batchSize;
     }

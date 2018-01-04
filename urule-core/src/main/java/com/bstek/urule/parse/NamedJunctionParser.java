@@ -21,7 +21,7 @@ import com.bstek.urule.model.rule.lhs.Criterion;
 import com.bstek.urule.model.rule.lhs.JunctionType;
 import com.bstek.urule.model.rule.lhs.NamedItem;
 import com.bstek.urule.model.rule.lhs.NamedJunction;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 import java.util.ArrayList;

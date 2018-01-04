@@ -21,7 +21,7 @@ import com.bstek.urule.model.flow.FlowDefinition;
 import com.bstek.urule.model.rete.JsonUtils;
 import com.bstek.urule.runtime.KnowledgePackage;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;

@@ -18,8 +18,8 @@ package com.bstek.urule.parse;
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.*;
 import com.bstek.urule.model.rule.lhs.CommonFunctionParameter;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 import java.util.List;

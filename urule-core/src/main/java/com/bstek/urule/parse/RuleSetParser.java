@@ -20,7 +20,7 @@ import com.bstek.urule.model.rule.Library;
 import com.bstek.urule.model.rule.LibraryType;
 import com.bstek.urule.model.rule.Rule;
 import com.bstek.urule.model.rule.RuleSet;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 import java.util.ArrayList;

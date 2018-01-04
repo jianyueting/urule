@@ -33,7 +33,7 @@ import com.bstek.urule.model.scorecard.AssignTargetType;
 import com.bstek.urule.model.scorecard.ScoringType;
 import com.bstek.urule.model.scorecard.runtime.ScoreRule;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.JsonDeserializer;

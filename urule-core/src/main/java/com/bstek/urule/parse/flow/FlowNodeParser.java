@@ -18,7 +18,7 @@ package com.bstek.urule.parse.flow;
 import com.bstek.urule.model.flow.Connection;
 import com.bstek.urule.parse.CriterionParser;
 import com.bstek.urule.parse.Parser;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

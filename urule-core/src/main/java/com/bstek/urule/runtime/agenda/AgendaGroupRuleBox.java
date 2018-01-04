@@ -20,7 +20,7 @@ import com.bstek.urule.model.rule.Rule;
 import com.bstek.urule.model.rule.RuleInfo;
 import com.bstek.urule.runtime.rete.Context;
 import com.bstek.urule.runtime.rete.EvaluationContext;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -18,7 +18,7 @@ package com.bstek.urule.runtime.builtinaction;
 import com.bstek.urule.model.library.action.annotation.ActionBean;
 import com.bstek.urule.model.library.action.annotation.ActionMethod;
 import com.bstek.urule.model.library.action.annotation.ActionMethodParameter;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;

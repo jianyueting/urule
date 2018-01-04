@@ -18,7 +18,7 @@ package com.bstek.urule.parse;
 import com.bstek.urule.RuleException;
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.lhs.*;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 /**

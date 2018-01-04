@@ -20,8 +20,8 @@ package com.bstek.urule.runtime;
  * @since 2015年9月29日
  */
 public interface BatchSession {
-    public static final int DEFAULT_BATCH_SIZE = 100;
-    public static final int DEFAULT_THREAD_SIZE = 10;
+    int DEFAULT_BATCH_SIZE = 100;
+    int DEFAULT_THREAD_SIZE = 10;
 
 
     /**

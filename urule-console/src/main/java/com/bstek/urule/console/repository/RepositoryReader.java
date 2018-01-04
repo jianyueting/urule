@@ -27,8 +27,6 @@ import java.util.List;
  * @since 2017年12月15日
  */
 public interface RepositoryReader {
-    public static final String BEAN_ID = RepositoryService.BEAN_ID;
-
     /**
      * 加载指定的companyId下创建的所有的项目信息
      *

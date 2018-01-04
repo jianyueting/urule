@@ -16,7 +16,7 @@
 package com.bstek.urule.model;
 
 import com.bstek.urule.RuleException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 

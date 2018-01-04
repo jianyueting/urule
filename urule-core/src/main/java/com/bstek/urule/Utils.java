@@ -20,7 +20,7 @@ import com.bstek.urule.model.function.FunctionDescriptor;
 import com.bstek.urule.model.library.Datatype;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.YearMonth;

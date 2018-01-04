@@ -20,7 +20,7 @@ import com.bstek.urule.model.flow.FlowNode;
 import com.bstek.urule.model.rule.Library;
 import com.bstek.urule.model.rule.LibraryType;
 import com.bstek.urule.parse.Parser;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

@@ -28,7 +28,7 @@ import com.bstek.urule.model.table.Column;
 import com.bstek.urule.model.table.Condition;
 import com.bstek.urule.model.table.DecisionTable;
 import com.bstek.urule.parse.Parser;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 import java.text.ParseException;

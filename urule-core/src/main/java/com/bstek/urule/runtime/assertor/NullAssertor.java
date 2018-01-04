@@ -17,7 +17,7 @@ package com.bstek.urule.runtime.assertor;
 
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Op;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Jacky.gao

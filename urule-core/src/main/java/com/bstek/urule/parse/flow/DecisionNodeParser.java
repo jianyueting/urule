@@ -18,7 +18,7 @@ package com.bstek.urule.parse.flow;
 import com.bstek.urule.model.flow.DecisionItem;
 import com.bstek.urule.model.flow.DecisionNode;
 import com.bstek.urule.model.flow.DecisionType;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 import java.util.ArrayList;

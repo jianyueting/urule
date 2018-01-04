@@ -19,7 +19,7 @@ package com.bstek.urule.runtime.service;
 import com.bstek.urule.RuleException;
 import com.bstek.urule.runtime.KnowledgePackage;
 import com.bstek.urule.runtime.cache.CacheUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

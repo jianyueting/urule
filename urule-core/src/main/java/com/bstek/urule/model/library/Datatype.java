@@ -17,7 +17,7 @@ package com.bstek.urule.model.library;
 
 import com.bstek.urule.RuleException;
 import com.bstek.urule.Utils;
-import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.joda.time.LocalDateTime;

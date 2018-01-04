@@ -19,7 +19,7 @@ import com.bstek.urule.model.flow.FlowDefinition;
 import com.bstek.urule.runtime.KnowledgePackage;
 import com.bstek.urule.runtime.KnowledgePackageWrapper;
 import com.bstek.urule.runtime.cache.CacheUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.ServletException;

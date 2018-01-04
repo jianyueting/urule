@@ -21,7 +21,7 @@ import com.bstek.urule.debug.MsgType;
 import com.bstek.urule.runtime.ElCalculator;
 import com.bstek.urule.runtime.WorkingMemory;
 import com.bstek.urule.runtime.assertor.AssertorEvaluator;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 
 import java.util.HashMap;
