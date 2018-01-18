@@ -467,7 +467,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.millis());
+        Period period = new Period(d2, d1, PeriodType.millis());
         return period.getMillis();
     }
 
@@ -478,7 +478,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.millis());
+        Period period = new Period(d2, d1, PeriodType.millis());
         return period.getMillis();
     }
 
@@ -489,7 +489,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.seconds());
+        Period period = new Period(d2, d1, PeriodType.seconds());
         return period.getSeconds();
     }
 
@@ -500,7 +500,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.seconds());
+        Period period = new Period(d2, d1, PeriodType.seconds());
         return period.getSeconds();
     }
 
@@ -511,7 +511,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.minutes());
+        Period period = new Period(d2, d1, PeriodType.minutes());
         return period.getMinutes();
     }
 
@@ -522,7 +522,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.minutes());
+        Period period = new Period(d2, d1, PeriodType.minutes());
         return period.getMinutes();
     }
 
@@ -533,7 +533,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.hours());
+        Period period = new Period(d2, d1, PeriodType.hours());
         return period.getHours();
     }
 
@@ -544,7 +544,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.hours());
+        Period period = new Period(d2, d1, PeriodType.hours());
         return period.getHours();
     }
 
@@ -555,7 +555,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.days());
+        Period period = new Period(d2, d1, PeriodType.days());
         return period.getDays();
     }
 
@@ -566,7 +566,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.days());
+        Period period = new Period(d2, d1, PeriodType.days());
         return period.getDays();
     }
 
@@ -577,7 +577,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.weeks());
+        Period period = new Period(d2, d1, PeriodType.weeks());
         return period.getWeeks();
     }
 
@@ -588,7 +588,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.weeks());
+        Period period = new Period(d2, d1, PeriodType.weeks());
         return period.getWeeks();
     }
 
@@ -599,7 +599,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.months());
+        Period period = new Period(d2, d1, PeriodType.months());
         return period.getMonths();
     }
 
@@ -610,7 +610,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.months());
+        Period period = new Period(d2, d1, PeriodType.months());
         return period.getMonths();
     }
 
@@ -621,7 +621,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.years());
+        Period period = new Period(d2, d1, PeriodType.years());
         return period.getYears();
     }
 
@@ -632,7 +632,7 @@ public class JodaDateAction {
             return null;
         }
 
-        Period period = new Period(d1, d2, PeriodType.years());
+        Period period = new Period(d2, d1, PeriodType.years());
         return period.getYears();
     }
 }
