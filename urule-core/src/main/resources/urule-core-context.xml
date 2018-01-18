@@ -103,6 +103,7 @@
     </bean>
 
     <bean id="urule.dateAction" class="com.bstek.urule.runtime.builtinaction.DateAction"/>
+    <bean id="urule.jodaDateAction" class="com.bstek.urule.runtime.builtinaction.JodaDateAction"/>
     <bean id="urule.stringAction" class="com.bstek.urule.runtime.builtinaction.StringAction"/>
     <bean id="urule.mathAction" class="com.bstek.urule.runtime.builtinaction.MathAction"/>
     <bean id="urule.listAction" class="com.bstek.urule.runtime.builtinaction.ListAction"/>
