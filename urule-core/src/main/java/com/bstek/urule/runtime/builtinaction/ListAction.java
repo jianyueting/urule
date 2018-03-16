@@ -164,12 +164,12 @@ public class ListAction {
     @ActionMethod(name = "指定对象是否存在")
     @ActionMethodParameter(names = {"集合对象", "要判断的对象"})
     public boolean contains(List<Object> list, Object obj) {
-        return list.contains(obj);
+        return list != null && list.contains(obj);
     }
 
     @ActionMethod(name = "List是否为空")
     @ActionMethodParameter(names = {"集合对象"})
     public boolean isEmpty(List<Object> list) {
-        return list.isEmpty();
+        return list == null || list.isEmpty();
     }
 }
