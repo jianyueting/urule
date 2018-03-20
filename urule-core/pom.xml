@@ -96,4 +96,29 @@
     </organization>
     <name>URule Core Project</name>
     <url>https://github.com/youseries/urule/tree/master/urule-core</url>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>4.5.3</version>
+                <executions>
+                    <execution>
+                        <id>antlr</id>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceDirectory>dsl</sourceDirectory>
+                    <outputDirectory>src/test/java</outputDirectory>
+                    <listener>false</listener>
+                    <visitor>true</visitor>
+                    <treatWarningsAsErrors>true</treatWarningsAsErrors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

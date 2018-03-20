@@ -29,6 +29,7 @@
     <bean id="urule.rulesRebuilder" class="com.bstek.urule.builder.RulesRebuilder">
         <property name="resourceLibraryBuilder" ref="urule.resourceLibraryBuilder"/>
     </bean>
+    <!--
     <bean id="urule.sinFunctionDescriptor" class="com.bstek.urule.model.function.impl.SinFunctionDescriptor">
         <property name="disabled" value="${urule.sinFunctionDisabled}"/>
     </bean>
@@ -44,6 +45,7 @@
     <bean id="urule.expFunctionDescriptor" class="com.bstek.urule.model.function.impl.ExpFunctionDescriptor">
         <property name="disabled" value="${urule.expFunctionDisabled}"/>
     </bean>
+    -->
     <bean id="urule.updateFactFunctionDescriptor" class="com.bstek.urule.model.function.impl.UpdateFactFunctionDescriptor">
         <property name="disabled" value="${urule.updateFactFunctionDisabled}"/>
     </bean>
@@ -105,7 +107,7 @@
     <bean id="urule.dateAction" class="com.bstek.urule.runtime.builtinaction.DateAction"/>
     <bean id="urule.jodaDateAction" class="com.bstek.urule.runtime.builtinaction.JodaDateAction"/>
     <bean id="urule.stringAction" class="com.bstek.urule.runtime.builtinaction.StringAction"/>
-    <bean id="urule.mathAction" class="com.bstek.urule.runtime.builtinaction.MathAction"/>
+    <!--<bean id="urule.mathAction" class="com.bstek.urule.runtime.builtinaction.MathAction"/>-->
     <bean id="urule.listAction" class="com.bstek.urule.runtime.builtinaction.ListAction"/>
     <bean id="urule.mapAction" class="com.bstek.urule.runtime.builtinaction.MapAction"/>
     <bean id="urule.loopAction" class="com.bstek.urule.runtime.builtinaction.LoopAction"/>

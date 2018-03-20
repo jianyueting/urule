@@ -122,9 +122,56 @@ public class BuildRulesVisitor extends RuleParserBaseVisitor<Object> {
         return (Library) doBuilder(ctx);
     }
 
+    private void visitAttributeContext(Rule rule, List<AttributeContext> attributesContext) {
+        SimpleDateFormat sd = new SimpleDateFormat(Configure.getDateFormat());
+
+        if (attributesContext != null) {
+            for (AttributeContext context : attributesContext) {
+                if (context.salienceAttribute() != null) {
+                    rule.setSalience(Integer.valueOf(context.salienceAttribute().NUMBER().getText()));
+                } else if (context.loopAttribute() != null) {
+                    rule.setLoop(Boolean.valueOf(context.loopAttribute().Boolean().getText()));
+                } else if (context.effectiveDateAttribute() != null) {
+                    try {
+                        String dateValue = context.effectiveDateAttribute().STRING().getText();
+                        dateValue = dateValue.substring(1, dateValue.length() - 1);
+                        rule.setEffectiveDate(sd.parse(dateValue));
+                    } catch (ParseException e) {
+                        throw new RuleException(e);
+                    }
+                } else if (context.expiresDateAttribute() != null) {
+                    try {
+                        String dateValue = context.expiresDateAttribute().STRING().getText();
+                        dateValue = dateValue.substring(1, dateValue.length() - 1);
+                        rule.setExpiresDate(sd.parse(dateValue));
+                    } catch (ParseException e) {
+                        throw new RuleException(e);
+                    }
+                } else if (context.enabledAttribute() != null) {
+                    rule.setEnabled(Boolean.valueOf(context.enabledAttribute().Boolean().getText()));
+                } else if (context.debugAttribute() != null) {
+                    rule.setDebug(Boolean.valueOf(context.debugAttribute().Boolean().getText()));
+                } else if (context.activationGroupAttribute() != null) {
+                    String value = context.activationGroupAttribute().STRING().getText();
+                    value = value.substring(1, value.length() - 1);
+                    rule.setActivationGroup(value);
+                } else if (context.agendaGroupAttribute() != null) {
+                    String value = context.agendaGroupAttribute().STRING().getText();
+                    value = value.substring(1, value.length() - 1);
+                    rule.setAgendaGroup(value);
+                } else if (context.autoFocusAttribute() != null) {
+                    rule.setAutoFocus(Boolean.valueOf(context.autoFocusAttribute().Boolean().getText()));
+                } else if (context.ruleflowGroupAttribute() != null) {
+                    String value = context.ruleflowGroupAttribute().STRING().getText();
+                    value = value.substring(1, value.length() - 1);
+                    rule.setRuleflowGroup(value);
+                }
+            }
+        }
+    }
+
     @Override
     public LoopRule visitLoopRuleDef(LoopRuleDefContext ctx) {
-        SimpleDateFormat sd = new SimpleDateFormat(Configure.getDateFormat());
         LoopRule rule = new LoopRule();
         String name = ctx.STRING().getText();
         name = name.substring(1, name.length() - 1);
@@ -158,49 +205,7 @@ public class BuildRulesVisitor extends RuleParserBaseVisitor<Object> {
 
 
         List<AttributeContext> attributesContext = ctx.attribute();
-        if (attributesContext != null) {
-            for (AttributeContext context : attributesContext) {
-                if (context.salienceAttribute() != null) {
-                    rule.setSalience(Integer.valueOf(context.salienceAttribute().NUMBER().getText()));
-                } else if (context.loopAttribute() != null) {
-                    rule.setLoop(Boolean.valueOf(context.loopAttribute().Boolean().getText()));
-                } else if (context.effectiveDateAttribute() != null) {
-                    try {
-                        String dateValue = context.effectiveDateAttribute().STRING().getText();
-                        dateValue = dateValue.substring(1, dateValue.length() - 1);
-                        rule.setEffectiveDate(sd.parse(dateValue));
-                    } catch (ParseException e) {
-                        throw new RuleException(e);
-                    }
-                } else if (context.expiresDateAttribute() != null) {
-                    try {
-                        String dateValue = context.expiresDateAttribute().STRING().getText();
-                        dateValue = dateValue.substring(1, dateValue.length() - 1);
-                        rule.setExpiresDate(sd.parse(dateValue));
-                    } catch (ParseException e) {
-                        throw new RuleException(e);
-                    }
-                } else if (context.enabledAttribute() != null) {
-                    rule.setEnabled(Boolean.valueOf(context.enabledAttribute().Boolean().getText()));
-                } else if (context.debugAttribute() != null) {
-                    rule.setDebug(Boolean.valueOf(context.debugAttribute().Boolean().getText()));
-                } else if (context.activationGroupAttribute() != null) {
-                    String value = context.activationGroupAttribute().STRING().getText();
-                    value = value.substring(1, value.length() - 1);
-                    rule.setActivationGroup(value);
-                } else if (context.agendaGroupAttribute() != null) {
-                    String value = context.agendaGroupAttribute().STRING().getText();
-                    value = value.substring(1, value.length() - 1);
-                    rule.setAgendaGroup(value);
-                } else if (context.autoFocusAttribute() != null) {
-                    rule.setAutoFocus(Boolean.valueOf(context.autoFocusAttribute().Boolean().getText()));
-                } else if (context.ruleflowGroupAttribute() != null) {
-                    String value = context.ruleflowGroupAttribute().STRING().getText();
-                    value = value.substring(1, value.length() - 1);
-                    rule.setRuleflowGroup(value);
-                }
-            }
-        }
+        visitAttributeContext(rule, attributesContext);
         LeftContext leftContext = ctx.left();
         ParseTree parseTree = leftContext.getChild(1);
         Lhs lhs = new Lhs();
@@ -219,55 +224,12 @@ public class BuildRulesVisitor extends RuleParserBaseVisitor<Object> {
 
     @Override
     public Rule visitRuleDef(RuleDefContext ctx) {
-        SimpleDateFormat sd = new SimpleDateFormat(Configure.getDateFormat());
         Rule rule = new Rule();
         String name = ctx.STRING().getText();
         name = name.substring(1, name.length() - 1);
         rule.setName(name);
         List<AttributeContext> attributesContext = ctx.attribute();
-        if (attributesContext != null) {
-            for (AttributeContext context : attributesContext) {
-                if (context.salienceAttribute() != null) {
-                    rule.setSalience(Integer.valueOf(context.salienceAttribute().NUMBER().getText()));
-                } else if (context.loopAttribute() != null) {
-                    rule.setLoop(Boolean.valueOf(context.loopAttribute().Boolean().getText()));
-                } else if (context.effectiveDateAttribute() != null) {
-                    try {
-                        String dateValue = context.effectiveDateAttribute().STRING().getText();
-                        dateValue = dateValue.substring(1, dateValue.length() - 1);
-                        rule.setEffectiveDate(sd.parse(dateValue));
-                    } catch (ParseException e) {
-                        throw new RuleException(e);
-                    }
-                } else if (context.expiresDateAttribute() != null) {
-                    try {
-                        String dateValue = context.expiresDateAttribute().STRING().getText();
-                        dateValue = dateValue.substring(1, dateValue.length() - 1);
-                        rule.setExpiresDate(sd.parse(dateValue));
-                    } catch (ParseException e) {
-                        throw new RuleException(e);
-                    }
-                } else if (context.enabledAttribute() != null) {
-                    rule.setEnabled(Boolean.valueOf(context.enabledAttribute().Boolean().getText()));
-                } else if (context.debugAttribute() != null) {
-                    rule.setDebug(Boolean.valueOf(context.debugAttribute().Boolean().getText()));
-                } else if (context.activationGroupAttribute() != null) {
-                    String value = context.activationGroupAttribute().STRING().getText();
-                    value = value.substring(1, value.length() - 1);
-                    rule.setActivationGroup(value);
-                } else if (context.agendaGroupAttribute() != null) {
-                    String value = context.agendaGroupAttribute().STRING().getText();
-                    value = value.substring(1, value.length() - 1);
-                    rule.setAgendaGroup(value);
-                } else if (context.autoFocusAttribute() != null) {
-                    rule.setAutoFocus(Boolean.valueOf(context.autoFocusAttribute().Boolean().getText()));
-                } else if (context.ruleflowGroupAttribute() != null) {
-                    String value = context.ruleflowGroupAttribute().STRING().getText();
-                    value = value.substring(1, value.length() - 1);
-                    rule.setRuleflowGroup(value);
-                }
-            }
-        }
+        visitAttributeContext(rule, attributesContext);
         LeftContext leftContext = ctx.left();
         ParseTree parseTree = leftContext.getChild(1);
         Lhs lhs = new Lhs();
