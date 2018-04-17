@@ -51,6 +51,7 @@ public class MathAction {
         return Math.min(v1.doubleValue(), v2.doubleValue());
     }
 
+    /*
     @ActionMethod(name = "求正弦")
     @ActionMethodParameter(names = {"数字"})
     public Number in(Object obj) {
@@ -92,6 +93,7 @@ public class MathAction {
         BigDecimal v1 = Utils.toBigDecimal(obj);
         return Math.log10(v1.doubleValue());
     }
+    */
 
     @ActionMethod(name = "四舍五入")
     @ActionMethodParameter(names = {"数字"})

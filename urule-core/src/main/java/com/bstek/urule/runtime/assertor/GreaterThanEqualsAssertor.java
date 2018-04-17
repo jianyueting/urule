@@ -18,6 +18,8 @@ package com.bstek.urule.runtime.assertor;
 import com.bstek.urule.Utils;
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Op;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -27,7 +29,7 @@ import java.util.Date;
  * @author Jacky.gao
  * @since 2015年1月6日
  */
-public class GreaterThenEqualsAssertor implements Assertor {
+public class GreaterThanEqualsAssertor implements Assertor {
 
     @Override
     public boolean eval(Object left, Object right, Datatype datatype) {
@@ -45,6 +47,20 @@ public class GreaterThenEqualsAssertor implements Assertor {
             if (result == 1 || result == 0) {
                 return true;
             }
+        } else if (datatype.equals(Datatype.LocalDate)) {
+            LocalDate leftDate = (LocalDate) datatype.convert(left);
+            LocalDate rightDate = (LocalDate) datatype.convert(right);
+            if (leftDate == null || rightDate == null) {
+                return false;
+            }
+            return !leftDate.isBefore(rightDate);
+        } else if (datatype.equals(Datatype.LocalDateTime)) {
+            LocalDateTime leftDate = (LocalDateTime) datatype.convert(left);
+            LocalDateTime rightDate = (LocalDateTime) datatype.convert(right);
+            if (leftDate == null || rightDate == null) {
+                return false;
+            }
+            return !leftDate.isBefore(rightDate);
         } else {
             BigDecimal leftNumber = Utils.toBigDecimal(left);
             BigDecimal rightNumber = Utils.toBigDecimal(right);

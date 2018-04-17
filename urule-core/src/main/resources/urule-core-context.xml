@@ -107,7 +107,7 @@
     <bean id="urule.dateAction" class="com.bstek.urule.runtime.builtinaction.DateAction"/>
     <bean id="urule.jodaDateAction" class="com.bstek.urule.runtime.builtinaction.JodaDateAction"/>
     <bean id="urule.stringAction" class="com.bstek.urule.runtime.builtinaction.StringAction"/>
-    <!--<bean id="urule.mathAction" class="com.bstek.urule.runtime.builtinaction.MathAction"/>-->
+    <bean id="urule.mathAction" class="com.bstek.urule.runtime.builtinaction.MathAction"/>
     <bean id="urule.listAction" class="com.bstek.urule.runtime.builtinaction.ListAction"/>
     <bean id="urule.mapAction" class="com.bstek.urule.runtime.builtinaction.MapAction"/>
     <bean id="urule.loopAction" class="com.bstek.urule.runtime.builtinaction.LoopAction"/>
@@ -239,11 +239,11 @@
 
     <bean id="urule.endWithAssertor" class="com.bstek.urule.runtime.assertor.EndWithAssertor"/>
     <bean id="urule.equalsAssertor" class="com.bstek.urule.runtime.assertor.EqualsAssertor"/>
-    <bean id="urule.greaterThenAssertor" class="com.bstek.urule.runtime.assertor.GreaterThenAssertor"/>
-    <bean id="urule.greaterThenEqualsAssertor" class="com.bstek.urule.runtime.assertor.GreaterThenEqualsAssertor"/>
+    <bean id="urule.greaterThenAssertor" class="com.bstek.urule.runtime.assertor.GreaterThanAssertor"/>
+    <bean id="urule.greaterThenEqualsAssertor" class="com.bstek.urule.runtime.assertor.GreaterThanEqualsAssertor"/>
     <bean id="urule.inAssertor" class="com.bstek.urule.runtime.assertor.InAssertor"/>
-    <bean id="urule.lessThenAssertor" class="com.bstek.urule.runtime.assertor.LessThenAssertor"/>
-    <bean id="urule.lessThenEqualsAssertor" class="com.bstek.urule.runtime.assertor.LessThenEqualsAssertor"/>
+    <bean id="urule.lessThenAssertor" class="com.bstek.urule.runtime.assertor.LessThanAssertor"/>
+    <bean id="urule.lessThenEqualsAssertor" class="com.bstek.urule.runtime.assertor.LessThanEqualsAssertor"/>
     <bean id="urule.notEndWithAssertor" class="com.bstek.urule.runtime.assertor.NotEndWithAssertor"/>
     <bean id="urule.notEqualsAssertor" class="com.bstek.urule.runtime.assertor.NotEqualsAssertor"/>
     <bean id="urule.notInAssertor" class="com.bstek.urule.runtime.assertor.NotInAssertor"/>

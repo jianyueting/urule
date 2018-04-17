@@ -18,6 +18,8 @@ package com.bstek.urule.runtime.assertor;
 import com.bstek.urule.Utils;
 import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Op;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -51,6 +53,20 @@ public class EqualsAssertor implements Assertor {
                 Calendar rightCalendar = Calendar.getInstance();
                 rightCalendar.setTime(rd);
                 return leftCalendar.compareTo(rightCalendar) == 0;
+            case LocalDate:
+                LocalDate leftDate = (LocalDate) datatype.convert(left);
+                LocalDate rightDate = (LocalDate) datatype.convert(right);
+                if (leftDate == null || rightDate == null) {
+                    return false;
+                }
+                return leftDate.equals(rightDate);
+            case LocalDateTime:
+                LocalDateTime leftDateTime = (LocalDateTime) datatype.convert(left);
+                LocalDateTime rightDateTime = (LocalDateTime) datatype.convert(right);
+                if (leftDateTime == null || rightDateTime == null) {
+                    return false;
+                }
+                return leftDateTime.equals(rightDateTime);
             case Double:
                 b1 = Utils.toBigDecimal(left);
                 b2 = Utils.toBigDecimal(right);
