@@ -20,6 +20,7 @@ import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Op;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.joda.time.YearMonth;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -67,6 +68,13 @@ public class EqualsAssertor implements Assertor {
                     return false;
                 }
                 return leftDateTime.equals(rightDateTime);
+            case YearMonth:
+                YearMonth leftYearMonth = (YearMonth) datatype.convert(left);
+                YearMonth rightYearMonth = (YearMonth) datatype.convert(right);
+                if (leftYearMonth == null || rightYearMonth == null) {
+                    return false;
+                }
+                return leftYearMonth.equals(rightYearMonth);
             case Double:
                 b1 = Utils.toBigDecimal(left);
                 b2 = Utils.toBigDecimal(right);

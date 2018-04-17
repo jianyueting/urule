@@ -20,6 +20,7 @@ import com.bstek.urule.model.library.Datatype;
 import com.bstek.urule.model.rule.Op;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.joda.time.YearMonth;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -56,6 +57,13 @@ public class LessThanAssertor implements Assertor {
         } else if (datatype.equals(Datatype.LocalDateTime)) {
             LocalDateTime leftDate = (LocalDateTime) datatype.convert(left);
             LocalDateTime rightDate = (LocalDateTime) datatype.convert(right);
+            if (leftDate == null || rightDate == null) {
+                return false;
+            }
+            return leftDate.isBefore(rightDate);
+        } else if (datatype.equals(Datatype.YearMonth)) {
+            YearMonth leftDate = (YearMonth) datatype.convert(left);
+            YearMonth rightDate = (YearMonth) datatype.convert(right);
             if (leftDate == null || rightDate == null) {
                 return false;
             }
