@@ -998,6 +998,7 @@ export function unlockFile(file,dispatch){
 };
 
 export function saveFileSource(file,content){
+    content=encodeURIComponent(content);
     var url=window._server+"/common/saveFile";
     $.ajax({
         url,

@@ -78,11 +78,6 @@ urule.Join.prototype.init=function(parentConnection){
 				self.addItem(true);				
 			}
 		},{
-			label:"添加命名联合条件",
-			onClick:function(){
-				self.addItem("named");
-			}
-		},{
 			label:"删除",
 			onClick:function(){
 				if(self.children.length>0){

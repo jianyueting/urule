@@ -84,11 +84,6 @@ public class ActivationRuleBox extends AbstractRuleBox {
     }
 
     @Override
-    public void reevaluate(Object obj, EvaluationContext context) {
-        super.reevaluate(obj, activations, context);
-    }
-
-    @Override
     public boolean add(Activation activation) {
         boolean shouldAdd = this.activationShouldAdd(activation);
         if (!shouldAdd) {

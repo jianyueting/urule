@@ -96,14 +96,6 @@ public class ActivationGroupRuleBox extends AbstractRuleBox {
     }
 
     @Override
-    public void reevaluate(Object obj, EvaluationContext context) {
-        for (ActivationGroup group : activationGroupMap.values()) {
-            List<Activation> activations = group.getActivations();
-            super.reevaluate(obj, activations, context);
-        }
-    }
-
-    @Override
     public boolean add(Activation activation) {
         boolean shouldAdd = this.activationShouldAdd(activation);
         if (!shouldAdd) {

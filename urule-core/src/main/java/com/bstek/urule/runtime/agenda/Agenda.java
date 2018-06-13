@@ -22,7 +22,6 @@ import com.bstek.urule.runtime.WorkingMemory;
 import com.bstek.urule.runtime.response.ExecutionResponseImpl;
 import com.bstek.urule.runtime.response.RuleExecutionResponse;
 import com.bstek.urule.runtime.rete.Context;
-import com.bstek.urule.runtime.rete.EvaluationContext;
 import com.bstek.urule.runtime.rete.FactTracker;
 import com.bstek.urule.runtime.rete.ReteInstance;
 
@@ -36,8 +35,8 @@ import java.util.List;
  */
 public class Agenda {
     private Context context;
-    private List<RuleBox> ruleBoxes = new ArrayList<RuleBox>();
-    private List<RuleInfo> matchedRules = new ArrayList<RuleInfo>();
+    private List<RuleBox> ruleBoxes = new ArrayList<>();
+    private List<RuleInfo> matchedRules = new ArrayList<>();
 
     public Agenda(WorkingMemory workingMemory, Context context) {
         this.context = context;
@@ -48,9 +47,9 @@ public class Agenda {
 
     public RuleExecutionResponse execute(AgendaFilter filter, int max) {
         ExecutionResponseImpl response = new ExecutionResponseImpl();
-        List<ActionValue> actionValues = new ArrayList<ActionValue>();
+        List<ActionValue> actionValues = new ArrayList<>();
         response.setActionValues(actionValues);
-        List<RuleInfo> firedRules = new ArrayList<RuleInfo>();
+        List<RuleInfo> firedRules = new ArrayList<>();
         RuleBox ruleBox = nextRuleBox();
         while (ruleBox != null) {
             List<RuleInfo> ruleInfoResult = ruleBox.execute(filter, max - firedRules.size(), actionValues);
@@ -100,12 +99,6 @@ public class Agenda {
     public void retract(Object obj) {
         for (RuleBox ruleBox : ruleBoxes) {
             ruleBox.retract(obj);
-        }
-    }
-
-    public void reevaluate(Object obj, EvaluationContext context) {
-        for (RuleBox ruleBox : ruleBoxes) {
-            ruleBox.reevaluate(obj, context);
         }
     }
 

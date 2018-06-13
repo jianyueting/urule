@@ -34,6 +34,9 @@ public class CommonFunctionValue extends AbstractValue {
     public String getId() {
         if (id == null) {
             id = "[函数]" + label + "(" + parameter.getId() + ")";
+            if (arithmetic != null) {
+                id = id + arithmetic.getId();
+            }
         }
         return id;
     }

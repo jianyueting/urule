@@ -37,6 +37,7 @@ import com.bstek.urule.runtime.response.RuleExecutionResponse;
 import com.bstek.urule.runtime.rete.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -88,9 +89,13 @@ public class KnowledgeSessionImpl implements KnowledgeSession {
                     } else if (type.equals(Datatype.Boolean)) {
                         initParameters.put(key, false);
                     } else if (type.equals(Datatype.List)) {
-                        initParameters.put(key, new ArrayList<Object>());
+                        initParameters.put(key, new ArrayList<>());
                     } else if (type.equals(Datatype.Set)) {
-                        initParameters.put(key, new HashSet<Object>());
+                        initParameters.put(key, new HashSet<>());
+                    } else if (type.equals(Datatype.Map)) {
+                        initParameters.put(key, new HashMap<>());
+                    } else if (type.equals(Datatype.BigDecimal)) {
+                        initParameters.put(key, new BigDecimal(0));
                     }
                 }
             }
@@ -198,6 +203,7 @@ public class KnowledgeSessionImpl implements KnowledgeSession {
         for (Object fact : facts) {
             evaluationRete(fact);
         }
+        evaluationContext.clean();
         buildElseRules(true);
         ExecutionResponseImpl resp = (ExecutionResponseImpl) agenda.execute(filter, max);
         resp.setDuration(System.currentTimeMillis() - start);
@@ -208,16 +214,28 @@ public class KnowledgeSessionImpl implements KnowledgeSession {
 
     @SuppressWarnings("rawtypes")
     private void clearInitParameters() {
-        for (Object obj : initParameters.values()) {
+        List<String> stringList = new ArrayList<>();
+        for (String key : initParameters.keySet()) {
+            Object obj = initParameters.get(key);
             if (obj == null) {
                 continue;
             }
             if (obj instanceof List) {
-                ((List) obj).clear();
+                ((List<?>) obj).clear();
+            } else if (obj instanceof Set) {
+                ((Set<?>) obj).clear();
+            } else if (obj instanceof Map) {
+                ((Map<?, ?>) obj).clear();
+            } else if (obj instanceof Number) {
+                initParameters.put(key, 0);
+            } else if (obj instanceof Boolean) {
+                initParameters.put(key, false);
+            } else if (obj instanceof String) {
+                stringList.add(key);
             }
-            if (obj instanceof Set) {
-                ((Set) obj).clear();
-            }
+        }
+        for (String key : stringList) {
+            initParameters.remove(key);
         }
     }
 
@@ -326,9 +344,9 @@ public class KnowledgeSessionImpl implements KnowledgeSession {
         for (ReteInstance reteInstance : reteInstanceList) {
             reteInstance.resetForReevaluate(obj);
         }
-        agenda.reevaluate(obj, evaluationContext);
         evaluationRete(obj);
         buildElseRules(false);
+        evaluationContext.clean();
     }
 
     private void evaluationRete(Object fact) {
