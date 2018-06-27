@@ -46,7 +46,7 @@ public class DecisionNode extends BindingNode {
     @Override
     public void enterNode(FlowContext context, FlowInstance instance) {
         instance.setCurrentNode(this);
-        if (decisionType.equals(DecisionType.Criteria)) {
+        if (decisionType == (DecisionType.Criteria)) {
             doCriteria(context, instance);
         } else {
             doPercent(context, instance);

@@ -49,10 +49,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.velocity.Template;
@@ -64,7 +61,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
+import java.awt.Color;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -215,25 +212,27 @@ public class PackageServletHandler extends BaseServletHandler {
                     map.put(headerName, "");
                 } else {
                     String value = "";
-                    int cellType = cell.getCellType();
+                    CellType cellType = cell.getCellTypeEnum();
                     switch (cellType) {
-                        case Cell.CELL_TYPE_STRING:
+                        case STRING:
                             value = cell.getStringCellValue();
                             break;
-                        case Cell.CELL_TYPE_BLANK:
+                        case BLANK:
                             value = "";
                             break;
-                        case Cell.CELL_TYPE_BOOLEAN:
+                        case BOOLEAN:
                             value = String.valueOf(cell.getBooleanCellValue());
                             break;
-                        case Cell.CELL_TYPE_NUMERIC:
+                        case NUMERIC:
                             value = String.valueOf(cell.getNumericCellValue());
                             break;
-                        case Cell.CELL_TYPE_ERROR:
+                        case ERROR:
                             value = "";
                             break;
-                        case Cell.CELL_TYPE_FORMULA:
+                        case FORMULA:
                             value = cell.getCellFormula();
+                            break;
+                        default:
                             break;
                     }
                     if (value == null) {
@@ -283,9 +282,9 @@ public class PackageServletHandler extends BaseServletHandler {
             }
             boolean result = pushKnowledgePackage(packageId, content, config.getClient());
             if (result) {
-                sb.append("<span class=\"text-info\" style='line-height:30px'>推送到客户端：" + config.getName() + "：" + config.getClient() + " 成功</span>");
+                sb.append("<span class=\"text-info\" style='line-height:30px'>推送到客户端：").append(config.getName()).append("：").append(config.getClient()).append(" 成功</span>");
             } else {
-                sb.append("<span class=\"text-danger\" style='line-height:30px'>推送到客户端：" + config.getName() + "：" + config.getClient() + " 失败</span>");
+                sb.append("<span class=\"text-danger\" style='line-height:30px'>推送到客户端：").append(config.getName()).append("：").append(config.getClient()).append(" 失败</span>");
             }
             i++;
         }
@@ -321,7 +320,7 @@ public class PackageServletHandler extends BaseServletHandler {
                 return false;
             }
             InputStream inputStream = connection.getInputStream();
-            String result = IOUtils.toString(inputStream,"UTF-8");
+            String result = IOUtils.toString(inputStream, "UTF-8");
             outputStream.close();
             inputStream.close();
             if (!result.equals("ok")) {
@@ -682,15 +681,15 @@ public class PackageServletHandler extends BaseServletHandler {
         List<RuleInfo> firedRules = res.getFiredRules();
         List<RuleInfo> matchedRules = res.getMatchedRules();
         StringBuffer sb = new StringBuffer();
-        sb.append("耗时：" + elapse + "ms");
+        sb.append("耗时：").append(elapse).append("ms");
         if (StringUtils.isEmpty(flowId)) {
             sb.append("，");
-            sb.append("匹配的规则共" + matchedRules.size() + "个");
+            sb.append("匹配的规则共").append(matchedRules.size()).append("个");
             if (matchedRules.size() > 0) {
                 buildRulesName(matchedRules, sb);
             }
             sb.append("；");
-            sb.append("触发的规则共" + firedRules.size() + "个");
+            sb.append("触发的规则共").append(firedRules.size()).append("个");
             buildRulesName(firedRules, sb);
         }
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -701,7 +700,7 @@ public class PackageServletHandler extends BaseServletHandler {
 
     private void buildObject(Object obj, Variable var) {
         String name = var.getName();
-        if (name.indexOf(".") != -1) {
+        if (name.contains(".")) {
             instanceChildObject(obj, name);
         }
         String defaultValue = var.getDefaultValue();
@@ -709,11 +708,11 @@ public class PackageServletHandler extends BaseServletHandler {
             return;
         }
         Datatype type = var.getType();
-        if (type.equals(Datatype.List)) {
+        if (type == (Datatype.List)) {
             Utils.setObjectProperty(obj, name, buildList(defaultValue));
-        } else if (type.equals(Datatype.Set)) {
+        } else if (type == (Datatype.Set)) {
             Utils.setObjectProperty(obj, name, buildSet(defaultValue));
-        } else if (type.equals(Datatype.Map)) {
+        } else if (type == (Datatype.Map)) {
             return;
         } else {
             Object value = type.convert(defaultValue);

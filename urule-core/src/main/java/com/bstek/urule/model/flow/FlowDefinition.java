@@ -111,7 +111,7 @@ public class FlowDefinition implements ProcessDefinition {
                 rulePackageNode.setKnowledgePackageWrapper(new KnowledgePackageWrapper(knowledgePackage));
             } else if (node instanceof DecisionNode) {
                 DecisionNode decisionNode = (DecisionNode) node;
-                if (decisionNode.getDecisionType().equals(DecisionType.Criteria)) {
+                if (decisionNode.getDecisionType() == (DecisionType.Criteria)) {
                     String script = decisionNode.buildDSLScript(libraries);
                     RuleSet ruleSet = dslRuleSetBuilder.build(script);
                     KnowledgeBase knowledgeBase = knowledgeBuilder.buildKnowledgeBase(ruleSet);

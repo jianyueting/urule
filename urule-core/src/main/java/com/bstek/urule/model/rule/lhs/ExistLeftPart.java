@@ -59,9 +59,9 @@ public class ExistLeftPart extends AllLeftPart {
     public String getId() {
         if (id == null) {
             id = "all(" + variableCategory + "." + variableLabel + "," + multiCondition.getId();
-            if (statisticType.equals(StatisticType.amount)) {
+            if (statisticType == (StatisticType.amount)) {
                 id += "," + amount + ")";
-            } else if (statisticType.equals(StatisticType.percent)) {
+            } else if (statisticType == (StatisticType.percent)) {
                 id += "," + percent + "%)";
             } else {
                 id += ")";

@@ -168,7 +168,7 @@ public class FrameServletHandler extends BaseServletHandler {
         String type = req.getParameter("type");
         FileType fileType = FileType.parse(type);
         StringBuilder content = new StringBuilder();
-        if (fileType.equals(FileType.UL)) {
+        if (fileType == (FileType.UL)) {
             content.append("rule \"rule01\"");
             content.append("\n");
             content.append("if");
@@ -176,7 +176,7 @@ public class FrameServletHandler extends BaseServletHandler {
             content.append("then");
             content.append("\r\n");
             content.append("end");
-        } else if (fileType.equals(FileType.DecisionTable)) {
+        } else if (fileType == (FileType.DecisionTable)) {
             content.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
             content.append("<decision-table>");
             content.append("<cell row=\"0\" col=\"2\" rowspan=\"1\"></cell>");
@@ -200,12 +200,12 @@ public class FrameServletHandler extends BaseServletHandler {
             content.append("<col num=\"1\" width=\"120\" type=\"Criteria\"/>");
             content.append("<col num=\"2\" width=\"200\" type=\"Assignment\"/>");
             content.append("</decision-table>");
-        } else if (fileType.equals(FileType.DecisionTree)) {
+        } else if (fileType == (FileType.DecisionTree)) {
             content.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
             content.append("<decision-tree>");
             content.append("<variable-tree-node></variable-tree-node>");
             content.append("</decision-tree>");
-        } else if (fileType.equals(FileType.ScriptDecisionTable)) {
+        } else if (fileType == (FileType.ScriptDecisionTable)) {
             content.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
             content.append("<script-decision-table>");
             content.append("<script-cell row=\"0\" col=\"2\" rowspan=\"1\"></script-cell>");
@@ -220,7 +220,7 @@ public class FrameServletHandler extends BaseServletHandler {
             content.append("<col num=\"1\" width=\"120\" type=\"Criteria\"/>");
             content.append("<col num=\"2\" width=\"200\" type=\"Assignment\"/>");
             content.append("</script-decision-table>");
-        } else if (fileType.equals(FileType.Scorecard)) {
+        } else if (fileType == (FileType.Scorecard)) {
             content.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
             content.append("<scorecard scoring-type=\"sum\" assign-target-type=\"none\">");
             content.append("</scorecard>");
@@ -238,27 +238,27 @@ public class FrameServletHandler extends BaseServletHandler {
         }
         RepositoryFile newFileInfo = new RepositoryFile();
         newFileInfo.setFullPath(path);
-        if (fileType.equals(FileType.VariableLibrary)) {
+        if (fileType == (FileType.VariableLibrary)) {
             newFileInfo.setType(Type.variable);
-        } else if (fileType.equals(FileType.ActionLibrary)) {
+        } else if (fileType == (FileType.ActionLibrary)) {
             newFileInfo.setType(Type.action);
-        } else if (fileType.equals(FileType.ConstantLibrary)) {
+        } else if (fileType == (FileType.ConstantLibrary)) {
             newFileInfo.setType(Type.constant);
-        } else if (fileType.equals(FileType.ParameterLibrary)) {
+        } else if (fileType == (FileType.ParameterLibrary)) {
             newFileInfo.setType(Type.parameter);
-        } else if (fileType.equals(FileType.DecisionTable)) {
+        } else if (fileType == (FileType.DecisionTable)) {
             newFileInfo.setType(Type.decisionTable);
-        } else if (fileType.equals(FileType.ScriptDecisionTable)) {
+        } else if (fileType == (FileType.ScriptDecisionTable)) {
             newFileInfo.setType(Type.scriptDecisionTable);
-        } else if (fileType.equals(FileType.Ruleset)) {
+        } else if (fileType == (FileType.Ruleset)) {
             newFileInfo.setType(Type.rule);
-        } else if (fileType.equals(FileType.UL)) {
+        } else if (fileType == (FileType.UL)) {
             newFileInfo.setType(Type.ul);
-        } else if (fileType.equals(FileType.DecisionTree)) {
+        } else if (fileType == (FileType.DecisionTree)) {
             newFileInfo.setType(Type.decisionTree);
-        } else if (fileType.equals(FileType.RuleFlow)) {
+        } else if (fileType == (FileType.RuleFlow)) {
             newFileInfo.setType(Type.flow);
-        } else if (fileType.equals(FileType.Scorecard)) {
+        } else if (fileType == (FileType.Scorecard)) {
             newFileInfo.setType(Type.scorecard);
         }
         writeObjectToJson(resp, newFileInfo);
@@ -302,6 +302,8 @@ public class FrameServletHandler extends BaseServletHandler {
                 break;
             case DIR:
                 throw new IllegalArgumentException("Unsupport filetype : " + type);
+            default:
+                break;
         }
         return root;
     }

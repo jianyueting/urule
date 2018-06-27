@@ -423,38 +423,38 @@ public class RepositoryServiceImpl extends BaseRepositoryService implements Repo
                     continue;
                 }
 
-                if (libType.equals(LibType.res)) {
-                    if (!fileType.equals(FileType.ActionLibrary) && !fileType.equals(FileType.ParameterLibrary) && !fileType.equals(FileType.ConstantLibrary) && !fileType.equals(FileType.VariableLibrary)) {
+                if (libType == (LibType.res)) {
+                    if (fileType != (FileType.ActionLibrary) && fileType != (FileType.ParameterLibrary) && fileType != (FileType.ConstantLibrary) && fileType != (FileType.VariableLibrary)) {
                         continue;
                     }
                 }
 
-                if (libType.equals(LibType.decisiontable)) {
-                    if (!fileType.equals(FileType.ScriptDecisionTable) && !fileType.equals(FileType.DecisionTable)) {
+                if (libType == (LibType.decisiontable)) {
+                    if (fileType != (FileType.ScriptDecisionTable) && fileType != (FileType.DecisionTable)) {
                         continue;
                     }
                 }
 
-                if (libType.equals(LibType.decisiontree)) {
-                    if (!fileType.equals(FileType.DecisionTree)) {
+                if (libType == (LibType.decisiontree)) {
+                    if (fileType != (FileType.DecisionTree)) {
                         continue;
                     }
                 }
 
-                if (libType.equals(LibType.ruleflow)) {
-                    if (!fileType.equals(FileType.RuleFlow)) {
+                if (libType == (LibType.ruleflow)) {
+                    if (fileType != (FileType.RuleFlow)) {
                         continue;
                     }
                 }
 
-                if (libType.equals(LibType.scorecard)) {
-                    if (!fileType.equals(FileType.Scorecard)) {
+                if (libType == (LibType.scorecard)) {
+                    if (fileType != (FileType.Scorecard)) {
                         continue;
                     }
                 }
 
-                if (libType.equals(LibType.ruleset)) {
-                    if (!fileType.equals(FileType.Ruleset) && !fileType.equals(FileType.UL)) {
+                if (libType == (LibType.ruleset)) {
+                    if (fileType != (FileType.Ruleset) && fileType != (FileType.UL)) {
                         continue;
                     }
                 }
@@ -463,27 +463,28 @@ public class RepositoryServiceImpl extends BaseRepositoryService implements Repo
                         continue;
                     }
                 }
-                if (name.toLowerCase().endsWith(FileType.ActionLibrary.toString())) {
+                String type = name.toLowerCase();
+                if (type.endsWith(FileType.ActionLibrary.toString())) {
                     file.setType(Type.action);
-                } else if (name.toLowerCase().endsWith(FileType.VariableLibrary.toString())) {
+                } else if (type.endsWith(FileType.VariableLibrary.toString())) {
                     file.setType(Type.variable);
-                } else if (name.toLowerCase().endsWith(FileType.ConstantLibrary.toString())) {
+                } else if (type.endsWith(FileType.ConstantLibrary.toString())) {
                     file.setType(Type.constant);
-                } else if (name.toLowerCase().endsWith(FileType.Ruleset.toString())) {
+                } else if (type.endsWith(FileType.Ruleset.toString())) {
                     file.setType(Type.rule);
-                } else if (name.toLowerCase().endsWith(FileType.DecisionTable.toString())) {
+                } else if (type.endsWith(FileType.DecisionTable.toString())) {
                     file.setType(Type.decisionTable);
-                } else if (name.toLowerCase().endsWith(FileType.UL.toString())) {
+                } else if (type.endsWith(FileType.UL.toString())) {
                     file.setType(Type.ul);
-                } else if (name.toLowerCase().endsWith(FileType.ParameterLibrary.toString())) {
+                } else if (type.endsWith(FileType.ParameterLibrary.toString())) {
                     file.setType(Type.parameter);
-                } else if (name.toLowerCase().endsWith(FileType.RuleFlow.toString())) {
+                } else if (type.endsWith(FileType.RuleFlow.toString())) {
                     file.setType(Type.flow);
-                } else if (name.toLowerCase().endsWith(FileType.ScriptDecisionTable.toString())) {
+                } else if (type.endsWith(FileType.ScriptDecisionTable.toString())) {
                     file.setType(Type.scriptDecisionTable);
-                } else if (name.toLowerCase().endsWith(FileType.DecisionTree.toString())) {
+                } else if (type.endsWith(FileType.DecisionTree.toString())) {
                     file.setType(Type.decisionTree);
-                } else if (name.toLowerCase().endsWith(FileType.Scorecard.toString())) {
+                } else if (type.endsWith(FileType.Scorecard.toString())) {
                     file.setType(Type.scorecard);
                 }
                 file.setFullPath(fileNode.getPath());
@@ -682,7 +683,7 @@ public class RepositoryServiceImpl extends BaseRepositoryService implements Repo
         for (String nodePath : files) {
             InputStream inputStream = readFile(nodePath, null);
             try {
-                String content = IOUtils.toString(inputStream,"UTF-8");
+                String content = IOUtils.toString(inputStream, "UTF-8");
                 inputStream.close();
                 boolean containPath = content.contains(path);
                 boolean containText = content.contains(searchText);

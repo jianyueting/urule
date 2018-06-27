@@ -37,14 +37,8 @@ public class CriteriaUnit {
                 if (junctionType == null) {
                     return response;
                 }
-                if (junctionType.equals(JunctionType.or)) {
-                    if (nextResult) {
-                        return response;
-                    }
-                } else {
-                    if (!nextResult) {
-                        return response;
-                    }
+                if (evaluate(nextResult, junctionType)) {
+                    return response;
                 }
             }
             EvaluateResponse res = new EvaluateResponse();
@@ -57,18 +51,18 @@ public class CriteriaUnit {
                 return response;
             }
             if (result) {
-                if (junctionType.equals(JunctionType.or)) {
+                if (junctionType == (JunctionType.or)) {
                     return response;
                 }
             } else {
-                if (junctionType.equals(JunctionType.and)) {
+                if (junctionType == (JunctionType.and)) {
                     return response;
                 }
             }
             if (nextUnits == null) {
                 return response;
             }
-            if (junctionType.equals(JunctionType.and)) {
+            if (junctionType == (JunctionType.and)) {
                 for (CriteriaUnit nextUnit : nextUnits) {
                     EvaluateResponse nextResponse = nextUnit.evaluate(context, obj, allMatchedObjects);
                     boolean nextResult = nextResponse.getResult();
@@ -79,14 +73,8 @@ public class CriteriaUnit {
                     if (type == null) {
                         return nextResponse;
                     }
-                    if (type.equals(JunctionType.or)) {
-                        if (nextResult) {
-                            return nextResponse;
-                        }
-                    } else {
-                        if (!nextResult) {
-                            return nextResponse;
-                        }
+                    if (evaluate(nextResult, type)) {
+                        return nextResponse;
                     }
                 }
                 EvaluateResponse res = new EvaluateResponse();
@@ -103,14 +91,8 @@ public class CriteriaUnit {
                     if (type == null) {
                         return nextResponse;
                     }
-                    if (type.equals(JunctionType.or)) {
-                        if (nextResult) {
-                            return nextResponse;
-                        }
-                    } else {
-                        if (!nextResult) {
-                            return nextResponse;
-                        }
+                    if (evaluate(nextResult, type)) {
+                        return nextResponse;
                     }
                 }
             }
@@ -118,6 +100,14 @@ public class CriteriaUnit {
         EvaluateResponse res = new EvaluateResponse();
         res.setResult(false);
         return res;
+    }
+
+    private boolean evaluate(boolean nextResult, JunctionType junctionType) {
+        if (junctionType == JunctionType.or) {
+            return nextResult;
+        } else {
+            return !nextResult;
+        }
     }
 
     public Criteria getCriteria() {

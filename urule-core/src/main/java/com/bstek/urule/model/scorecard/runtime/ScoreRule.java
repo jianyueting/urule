@@ -99,11 +99,11 @@ public class ScoreRule extends Rule {
         items.addAll(rowMap.values());
         ScorecardImpl card = new ScorecardImpl(getName(), items, isdebug);
         Object actualScore = null;
-        if (scoringType.equals(ScoringType.sum)) {
+        if (scoringType == (ScoringType.sum)) {
             actualScore = card.executeSum(context);
-        } else if (scoringType.equals(ScoringType.weightsum)) {
+        } else if (scoringType == (ScoringType.weightsum)) {
             actualScore = card.executeWeightSum(context);
-        } else if (scoringType.equals(ScoringType.custom)) {
+        } else if (scoringType == (ScoringType.custom)) {
             if (isdebug && Utils.isDebug()) {
                 String msg = "---执行自定义评分卡得分计算Bean:" + scoringBean;
                 context.debugMsg(msg, MsgType.ScoreCard, isdebug);
@@ -111,7 +111,7 @@ public class ScoreRule extends Rule {
             ScoringStrategy scoringStrategy = (ScoringStrategy) context.getApplicationContext().getBean(scoringBean);
             actualScore = scoringStrategy.calculate(card, context);
         }
-        if (assignTargetType.equals(AssignTargetType.none)) {
+        if (assignTargetType == (AssignTargetType.none)) {
             log.warn("Scorecard [" + card.getName() + "] not setting assignment object for score value, score value is :" + actualScore);
         } else {
             Object targetFact = null;

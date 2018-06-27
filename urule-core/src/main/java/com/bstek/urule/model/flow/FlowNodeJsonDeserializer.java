@@ -75,7 +75,7 @@ public class FlowNodeJsonDeserializer extends JsonDeserializer<List<FlowNode>> {
                         JsonNode itemNode = iter.next();
                         DecisionItem item = new DecisionItem();
                         item.setTo(itemNode.get("to").getTextValue());
-                        if (decisionType.equals(DecisionType.Criteria)) {
+                        if (decisionType == (DecisionType.Criteria)) {
                             item.setScript(itemNode.get("script").getTextValue());
                         } else {
                             item.setPercent(itemNode.get("percent").getIntValue());
@@ -113,6 +113,8 @@ public class FlowNodeJsonDeserializer extends JsonDeserializer<List<FlowNode>> {
                     break;
                 case Start:
                     node = new StartNode();
+                    break;
+                default:
                     break;
             }
             String name = childNode.get("name").getTextValue();

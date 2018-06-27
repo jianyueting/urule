@@ -176,9 +176,9 @@ public class ReteNodeJsonDeserializer extends AbstractJsonDeserializer<List<Rete
                 String statisticTypeStr = JsonUtils.getJsonValue(leftPartJsonNode, "statisticType");
                 StatisticType statisticType = StatisticType.valueOf(statisticTypeStr);
                 allLeftPart.setStatisticType(statisticType);
-                if (statisticType.equals(StatisticType.percent)) {
+                if (statisticType == (StatisticType.percent)) {
                     allLeftPart.setPercent(Integer.valueOf(JsonUtils.getJsonValue(leftPartJsonNode, "percent")));
-                } else if (statisticType.equals(StatisticType.amount)) {
+                } else if (statisticType == (StatisticType.amount)) {
                     allLeftPart.setAmount(Integer.valueOf(JsonUtils.getJsonValue(leftPartJsonNode, "amount")));
                 }
                 allLeftPart.setVariableCategory(JsonUtils.getJsonValue(leftPartJsonNode, "variableCategory"));
@@ -193,9 +193,9 @@ public class ReteNodeJsonDeserializer extends AbstractJsonDeserializer<List<Rete
                 String existStatisticTypeStr = JsonUtils.getJsonValue(leftPartJsonNode, "statisticType");
                 StatisticType existStatisticType = StatisticType.valueOf(existStatisticTypeStr);
                 existLeftPart.setStatisticType(existStatisticType);
-                if (existStatisticType.equals(StatisticType.percent)) {
+                if (existStatisticType == (StatisticType.percent)) {
                     existLeftPart.setPercent(Integer.valueOf(JsonUtils.getJsonValue(leftPartJsonNode, "percent")));
-                } else if (existStatisticType.equals(StatisticType.amount)) {
+                } else if (existStatisticType == (StatisticType.amount)) {
                     existLeftPart.setAmount(Integer.valueOf(JsonUtils.getJsonValue(leftPartJsonNode, "amount")));
                 }
                 existLeftPart.setVariableCategory(JsonUtils.getJsonValue(leftPartJsonNode, "variableCategory"));
