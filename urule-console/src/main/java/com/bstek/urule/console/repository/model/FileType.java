@@ -30,7 +30,7 @@ public enum FileType {
     ParameterLibrary("pl.xml"),
     ConstantLibrary("cl.xml"),
     RuleFlow("rl.xml"),
-    UL(".ul"),
+    UL("ul"),
     DecisionTree("dtree.xml"),
     Scorecard("sc"),
     DIR("DIR");

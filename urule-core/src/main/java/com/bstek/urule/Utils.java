@@ -63,6 +63,17 @@ public class Utils implements ApplicationContextAware {
         }
     }
 
+    public static String decodeContent(String content) {
+        if (StringUtils.isBlank(content)) {
+            return content;
+        }
+        try {
+            return URLDecoder.decode(content, "utf-8");
+        } catch (Exception ex) {
+            return content;
+        }
+    }
+
     public static String encodeURL(String str) {
         if (StringUtils.isBlank(str)) {
             return str;
@@ -81,10 +92,6 @@ public class Utils implements ApplicationContextAware {
             }
             byte[] fileBytes = text.getBytes("iso8859-1");
             boolean isiso = text.equals(new String(fileBytes, "iso8859-1"));
-            if (isiso) {
-                text = new String(fileBytes, "utf-8");
-            }
-            isiso = text.equals(new String(text.getBytes("iso8859-1"), "iso8859-1"));
             if (isiso) {
                 text = new String(fileBytes, "utf-8");
             }
