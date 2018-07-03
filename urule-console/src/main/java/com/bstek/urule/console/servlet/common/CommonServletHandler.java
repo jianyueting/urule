@@ -47,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -69,6 +70,7 @@ public class CommonServletHandler extends BaseServletHandler {
     public void saveFile(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String file = req.getParameter("file");
         String content = req.getParameter("content");
+        content = URLDecoder.decode(content, "UTF-8");
         String versionComment = req.getParameter("versionComment");
         Boolean newVersion = Boolean.valueOf(req.getParameter("newVersion"));
         User user = EnvironmentUtils.getLoginUser(new RequestContext(req, resp));
