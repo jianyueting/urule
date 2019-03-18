@@ -36,6 +36,7 @@ import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 import javax.jcr.version.VersionManager;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -185,6 +186,7 @@ public abstract class BaseRepositoryService implements RepositoryReader, Applica
         InputStream inputStream = fileBinary.getStream();
         String content = IOUtils.toString(inputStream, "utf-8");
         inputStream.close();
+        content = URLDecoder.decode(content,"UTF-8");
         Document document = DocumentHelper.parseText(content);
         Element rootElement = document.getRootElement();
         List<ResourcePackage> packages = new ArrayList<ResourcePackage>();
